@@ -25,3 +25,10 @@ celery:
   result_backend: redis://:Liupeitao1.@106.15.10.74:6379/13
   # 其他Celery配置参数...
 
+
+rabbitmq:
+  host: localhost
+  port: 5672
+  username: myuser
+  password: mypassword
+  virtual_host: myvhost

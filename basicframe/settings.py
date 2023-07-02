@@ -137,3 +137,10 @@ CELERY_BROKER_URL = CELERY_CONFIG['broker_url']
 CELERY_RESULT_BACKEND = CELERY_CONFIG['result_backend']
 # 其他Celery配置参数...
 
+# 获取RabbitMQ配置
+rabbitmq_config = config['rabbitmq']
+RABBITMQ_HOST = rabbitmq_config['host']
+RABBITMQ_PORT = rabbitmq_config['port']
+RABBITMQ_USERNAME = rabbitmq_config['username']
+RABBITMQ_PASSWORD = rabbitmq_config['password']
+RABBITMQ_VIRTUAL_HOST = rabbitmq_config['virtual_host']
