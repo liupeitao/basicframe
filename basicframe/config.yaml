@@ -1,0 +1,27 @@
+# Redis配置
+redis:
+  host: 106.15.10.74
+  port: 6379
+  db: 0
+  password: Liupeitao1.
+
+# MySQL配置
+mysql:
+  host: 106.15.10.74
+  port: 3306
+  database: mydatabase
+  username: root
+  password: root123456
+
+# MongoDB配置
+mongodb:
+  host: localhost
+  port: 27017
+  database: mydatabase
+
+# Celery配置
+celery:
+  broker_url: redis://:Liupeitao1.@106.15.10.74:6379/0
+  result_backend: redis://:Liupeitao1.@106.15.10.74:6379/13
+  # 其他Celery配置参数...
+
