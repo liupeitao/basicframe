@@ -21,7 +21,7 @@ mongodb:
 
 # Celery配置
 celery:
-  broker_url: redis://:Liupeitao1.@106.15.10.74:6379/0
+  broker_url: redis://:Liupeitao1.@106.15.10.74:6379/1
   result_backend: redis://:Liupeitao1.@106.15.10.74:6379/13
   # 其他Celery配置参数...
 
