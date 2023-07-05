@@ -1,5 +1,3 @@
-import asyncio
-
 from basicframe.utils.htmlvideoutil import HtmlVideoUtil
 from basicframe.midware.redisclient import RedisClient
 redis_conn = RedisClient().connect()
