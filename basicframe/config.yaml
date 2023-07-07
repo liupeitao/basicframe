@@ -4,7 +4,7 @@ redis:
   port: 6379
   db: 0
   password: Liupeitao1.
-
+  url : redis://:Liupeitao1.@localhost:6379/0
 # MySQL配置
 mysql:
   host: 106.15.10.74
@@ -18,13 +18,15 @@ mongodb:
   host: localhost
   port: 27017
   database: mydatabase
+  url : mongodb://root:root123456@localhost:27017/admin  # "mongodb://qychap:qyno11-d@158.247.243.169:18000/?authSource=admin"
+  db: notes
+  coll: articles
 
 # Celery配置
 celery:
   broker_url: redis://:Liupeitao1.@106.15.10.74:6379/1
   result_backend: redis://:Liupeitao1.@106.15.10.74:6379/13
   # 其他Celery配置参数...
-
 
 rabbitmq:
   host: localhost

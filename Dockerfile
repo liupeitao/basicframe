@@ -35,3 +35,4 @@ VOLUME /app/basicframe/assets
 #CMD service ntp start && tail -f /dev/null
 CMD python basicframe/down/download_npr_multithread.py
 #CMD python basicframe/playground/celery_work.py
+

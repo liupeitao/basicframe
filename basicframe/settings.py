@@ -10,6 +10,8 @@ import os
 
 BOT_NAME = "basicframe"
 
+# BOT_NAME = "articlex_spider"
+
 SPIDER_MODULES = ["basicframe.spiders"]
 NEWSPIDER_MODULE = "basicframe.spiders"
 
@@ -20,7 +22,7 @@ NEWSPIDER_MODULE = "basicframe.spiders"
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 16
+CONCURRENT_REQUESTS = 1
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -64,7 +66,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    "basicframe.pipelines.BasicframePipeline": 301,
+    # "basicframe.pipelines.BasicframePipeline": 301,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -94,6 +96,13 @@ TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
 
+# scrapy -redis article
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+
+# 使用 Redis 的去重过滤器
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+
+
 # 解析yaml文件配置
 import yaml
 # 获取当前文件的目录路径
@@ -116,6 +125,7 @@ REDIS_HOST = REDIS_CONFIG['host']
 REDIS_PORT = REDIS_CONFIG['port']
 REDIS_DB = REDIS_CONFIG['db']
 REDIS_PASSWORD = REDIS_CONFIG['password']
+REDIS_URL = REDIS_CONFIG['url']
 
 # 获取MySQL配置
 MYSQL_CONFIG = config['mysql']
@@ -144,3 +154,13 @@ RABBITMQ_PORT = rabbitmq_config['port']
 RABBITMQ_USERNAME = rabbitmq_config['username']
 RABBITMQ_PASSWORD = rabbitmq_config['password']
 RABBITMQ_VIRTUAL_HOST = rabbitmq_config['virtual_host']
+
+
+# mongodb 配置
+mongodb_config = config['mongodb']
+MONGODB_HOST = mongodb_config['host']
+MONGODB_PORT = mongodb_config['port']
+MONGO_DB = mongodb_config['db']
+MONGO_URL = mongodb_config['url']
+MONGO_COLL = mongodb_config['coll']
+
