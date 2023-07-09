@@ -7,7 +7,7 @@ import redis
 
 # 控制并发数为100
 semaphore = asyncio.Semaphore(100)
-from basicframe.midware.redisclient import RedisClient
+from basicframe.midwares.redisclient import RedisClient
 redis_conn = RedisClient().connect()
 
 

@@ -1,19 +1,39 @@
+import math
 import os
 import subprocess
-from basicframe.midware.redisclient import RedisClient
-from basicframe.utils.decorator import log, execution_time
+
+from basicframe.midwares.redisclient import RedisClient
 from basicframe.utils.videoutils import VideoUtils
 
 redis_conn = RedisClient().connect()
 
 
 class M3u8Utils(VideoUtils):
-    def __init__(self, path_id, source, save_dir):
-        super().__init__(path_id, source, save_dir)
 
+
+    @property
+    def path(self):
+        return self._path
+
+    @property
+    def source(self):
+        return self._source
+
+    @property
+    def save_dir(self):
+        return self._save_dir
+
+    @property
     def duration(self):
-        if self._duration != 0:
-            return self._duration
+        return self._duration
+
+
+    def __init__(self, path, source, save_dir):
+        super().__init__(path, source, save_dir)
+
+    def get_duration(self):
+        if self.duration != 0:
+            return self.duration
         m3u8_url = self.path
         command = ['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of',
                    'default=noprint_wrappers=1:nokey=1', '-i', m3u8_url]
@@ -22,8 +42,7 @@ class M3u8Utils(VideoUtils):
                 'utf-8').strip()
             duration = float(output)
             self._duration = duration
-            print(duration)
-            return duration
+            return self._duration
         except Exception as e:
             print(e.args, e)
             return 0
@@ -43,9 +62,9 @@ class M3u8Utils(VideoUtils):
         return super().generate_std_name()
 
 
-# if __name__ == '__main__':
-#     for i in redis_conn.lrange('not_down', 0, 10):
-#         video_util = M3u8Utils('https://v4.cdtlas.com/20220612/cfk1lDBj/index.m3u8', 'kmj',
-#                            '/home/liupeitao/PycharmProjects/basicframe/basicframe/assets/videos/ru')
-#         print(video_util.download())
-#
+if __name__ == '__main__':
+    for i in redis_conn.lrange('not_down', 0, 10):
+        video_util = M3u8Utils('https://v4.cdtlas.com/20220612/cfk1lDBj/index.m3u8', 'kmj',
+                           '/home/liupeitao/PycharmProjects/basicframe/basicframe/assets/videos/ru')
+        print(video_util.get_duration())
+

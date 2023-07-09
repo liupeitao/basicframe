@@ -1,6 +1,4 @@
-import asyncio
-
-from basicframe.utils.downloader import Downloader, YtDlpDownloader, YouGetDownloader
+from basicframe.utils.downloader import YtDlpDownloader
 from basicframe.utils.videoutils import VideoUtils
 
 
@@ -9,7 +7,7 @@ class HtmlVideoUtil(VideoUtils):
         super().__init__(path_id, source, save_dir)
         self.downloader = downloader
 
-    def duration(self):
+    def get_duration(self):
         if self._duration != 0:
             return self._duration
         try:

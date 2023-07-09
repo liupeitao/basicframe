@@ -34,7 +34,7 @@ def down_m3u8_task(m3u8_url, path):
 
 @app.task
 def html_video_download_task(url):
-    video =M3u8Utils(path_id=url, source='ru', save_dir='/home/liupeitao/PycharmProjects/basicframe/basicframe/assets/videos/ru')
+    video =M3u8Utils(path=url, source='ru', save_dir='/home/liupeitao/PycharmProjects/basicframe/basicframe/assets/videos/ru')
     video.download()
 
 

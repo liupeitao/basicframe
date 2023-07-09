@@ -1,4 +1,5 @@
 import time
+
 from gne import GeneralNewsExtractor
 from goose3 import Goose
 from scrapy.http import HtmlResponse
@@ -6,7 +7,7 @@ from scrapy.spiders import Rule
 from scrapy_redis.spiders import RedisCrawlSpider
 
 from basicframe.items.articleitems import ArticleItem
-from basicframe.spiders.link_extractor import ArticleLinkExtractor
+from basicframe.spiders.extractors.link_extractor import ArticleLinkExtractor
 
 
 class ArticleSpider(RedisCrawlSpider):
@@ -16,10 +17,12 @@ class ArticleSpider(RedisCrawlSpider):
     # allowed_domains = ["www.liaoxuefeng.com"]
     # start_urls = ['https://www.lemonde.fr/musiques/']
 
-    article_xpath_extractor = ArticleLinkExtractor(deny=["/search", "/auth", "#", "sign", "login", "redirect"], canonicalize=False,
-                                                   restrict_xpaths="//*[contains(@class,'post') or contains(@class,'cate') or contains(@class,'article') or contains(@class,'cont' )]|//article", target="link")
+    article_xpath_extractor = ArticleLinkExtractor(deny=["/search", "/auth", "#", "sign", "login", "redirect"],
+                                                   canonicalize=False,
+                                                   restrict_xpaths="//*[contains(@class,'post') or contains(@class,'cate') or contains(@class,'article') or contains(@class,'cont' )]|//article",
+                                                   target="link")
     article_link_extractor = ArticleLinkExtractor(
-        allow="(article|post|content)", canonicalize=False,)
+        allow="(article|post|content)", canonicalize=False, )
 
     rules = (
         Rule(link_extractor=article_xpath_extractor,

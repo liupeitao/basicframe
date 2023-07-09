@@ -1,8 +1,9 @@
-from basicframe.utils.decorator import execution_time, log
-
 import math
+import random
+
+
 class VideoUtils:
-    def __init__(self, path_id, source, save_dir):
+    def __init__(self, path_id=random.randint(0, 100000), source='tmp', save_dir='/tmp'):
         self._duration = 0
         self._path = path_id or ''
         self._source = source
@@ -12,9 +13,9 @@ class VideoUtils:
         pass
 
     def generate_std_name(self):
-        return f"{self.source}_{math.ceil(self.duration())}_{self.path.replace('/', '_').replace(':', '_').replace('.', '_')}.mp4"
+        return f"{self.source}_{math.ceil(self.get_duration())}_{self.path.replace('/', '_').replace(':', '_').replace('.', '_')}.mp4"
 
-    def duration(self):
+    def get_duration(self):
         return self._duration
 
     @property
@@ -29,4 +30,6 @@ class VideoUtils:
     def save_dir(self):
         return self._save_dir
 
-
+    @property
+    def duration(self):
+        return self._duration

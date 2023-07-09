@@ -67,6 +67,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     # "basicframe.pipelines.BasicframePipeline": 301,
+      "basicframe.pipelines.articlespiderpipeline.ArticleSpiderPipeline" : 302
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

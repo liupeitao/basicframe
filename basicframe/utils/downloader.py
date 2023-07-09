@@ -1,4 +1,3 @@
-import json
 import os
 import re
 import subprocess
@@ -13,11 +12,11 @@ class Downloader:
         pass
 
     @staticmethod
-    def get_video_info( url):
+    def get_video_info(url):
         pass
 
     @staticmethod
-    def download_video( url, output_dir='.'):
+    def download_video(url, output_dir='.'):
         pass
 
     @staticmethod
@@ -68,13 +67,12 @@ class YouGetDownloader(Downloader):
 
     @staticmethod
     def download_video(url, output_dir='./'):
-        command = ['you-get','-o', os.path.join(output_dir, url), f'{url}']
+        command = ['you-get', '-o', os.path.join(output_dir, url), f'{url}']
         output = subprocess.check_output(command, encoding='utf-8')
 
     @staticmethod
     def get_duration(url):
         return 0
-
 
 # if __name__ == '__main__':
 #     print(YtDlpDownloader.get_video_info('https://www.bilibili.com/video/BV1ns4y1F7EQ/?spm_id_from=333.1007.0.0'))
