@@ -5,8 +5,8 @@
 from fake_useragent import UserAgent
 from scrapy import signals
 
+
 # useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
 
 
 class BasicframeSpiderMiddleware:
@@ -103,7 +103,6 @@ class BasicframeDownloaderMiddleware:
         spider.logger.info("Spider opened: %s" % spider.name)
 
 
-
 class ProxyMiddleware(object):
     def process_request(self, request, spider):
         proxy = "http://127.0.0.1:7890"
@@ -114,4 +113,3 @@ class ProxyMiddleware(object):
         request.meta["proxy"] = proxy
         print(request.headers['User-Agent'])
         print(f"TestProxyMiddleware --> {proxy}")
-

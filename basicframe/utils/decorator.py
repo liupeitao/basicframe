@@ -11,7 +11,6 @@ def execution_time(func):
         end_time = time.time()
         print(f"Function {func.__name__} took {end_time - start_time:.5f} seconds to execute.")
         return result
-
     return wrapper
 
 
@@ -22,7 +21,6 @@ def log(func):
         result = func(*args, **kwargs)
         print(f"INFO: Function {func.__name__} returned {result}")
         return result
-
     return wrapper
 
 
@@ -56,9 +54,6 @@ def request_with_progress(method):
         for data in response_iter:
             progress_bar.update(len(data))
             response._content += data
-
         progress_bar.close()
-
         return response
-
     return wrapper

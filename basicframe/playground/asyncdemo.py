@@ -1,13 +1,11 @@
 import asyncio
-import math
-import os
 import subprocess
 import time
-import redis
 
 # 控制并发数为100
 semaphore = asyncio.Semaphore(100)
 from basicframe.midwares.redisclient import RedisClient
+
 redis_conn = RedisClient().connect()
 
 
@@ -45,33 +43,9 @@ async def download_m3u8_video(m3u8_url, path):
         raise Exception
 
 
-# async def task(url):
-#     m3u8_url = 'https://v5.cdtlas.com/20220619/6hCH3rE1/index.m3u8'
-#     print(url)
-#     await asyncio.sleep(2)
-
-#     # await download_m3u8(m3u8_url, os.path.join(dir, file_name))
-
-
-# async def main():
-#     for i in range(10):
-#         await task(i)
-
-# start = time.time()
-# asyncio.run(main())
-
-# end = time.time()
-# print(end - start)
-
-
-# def s():
-#     yield redis_conn.rpop('fwe')
-
 async def task(url):
     m3u8_url = 'https://v5.cdtlas.com/20220619/6hCH3rE1/index.m3u8'
     print(url)
-
-    # await download_m3u8(m3u8_url, os.path.join(dir, file_name))
 
 
 m_list = redis_conn.lrange('kmj_valid_m3u8', 0, 100)
@@ -89,37 +63,3 @@ start = time.time()
 asyncio.run(main())
 end = time.time()
 print(end - start)
-
-# async def main():
-#     start = time.time()
-#     dir = '/home/liupeitao/src/Python/utils/'
-#     for i in range(5):
-#         try:
-#             m3u8_url = 'https://v5.cdtlas.com/20220619/6hCH3rE1/index.m3u8'
-#             await task(m3u8_url)
-#         except Exception as e:
-#             print('完成')
-#             break
-#     end = time.time()
-#     print(end - start)
-
-
-# redis_conn.rpop('kmj_valid_m3u8')
-# if __name__ == '__main__':
-#     dir = '/media/ptking/Elements/meiju/'
-#     while True:
-#         m3u8_url = redis_conn.rpop('kmj_valid_m3u8').decode()
-#         if not m3u8_url:
-#             break
-#         try:
-#             # 此处可以优化 异步
-#             duration = math.ceil(get_m3u8_duration(m3u8_url))
-#             file_name = generate_std_filename('91kmj', duration, m3u8_url)
-#             path = os.path.join(dir, file_name)
-#             if os.path.exists(path):
-#                 continue
-#             print("save to ", path)
-#             download_m3u8(m3u8_url, path)
-#         except Exception as e:
-#             redis_conn.lpush('not_down', m3u8_url)
-#             break

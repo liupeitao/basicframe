@@ -67,7 +67,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     # "basicframe.pipelines.BasicframePipeline": 301,
-      "basicframe.pipelines.articlespiderpipeline.ArticleSpiderPipeline" : 302
+    "basicframe.pipelines.articlespiderpipeline.ArticleSpiderPipeline": 302
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -96,20 +96,20 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
-
 # scrapy -redis article
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"
-
 # 使用 Redis 的去重过滤器
 DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 
-
 # 解析yaml文件配置
 import yaml
+
 # 获取当前文件的目录路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
 # 根据当前文件的目录路径拼接配置文件的路径
 config_file = os.path.join(current_dir, 'config.yaml')
+
+
 def load_config(file_path):
     with open(file_path, 'r') as f:
         config = yaml.safe_load(f)
@@ -136,12 +136,6 @@ MYSQL_DATABASE = MYSQL_CONFIG['database']
 MYSQL_USERNAME = MYSQL_CONFIG['username']
 MYSQL_PASSWORD = MYSQL_CONFIG['password']
 
-# 获取MongoDB配置
-MONGODB_CONFIG = config['mongodb']
-MONGODB_HOST = MONGODB_CONFIG['host']
-MONGODB_PORT = MONGODB_CONFIG['port']
-MONGODB_DATABASE = MONGODB_CONFIG['database']
-
 # 获取Celery配置
 CELERY_CONFIG = config['celery']
 CELERY_BROKER_URL = CELERY_CONFIG['broker_url']
@@ -156,7 +150,6 @@ RABBITMQ_USERNAME = rabbitmq_config['username']
 RABBITMQ_PASSWORD = rabbitmq_config['password']
 RABBITMQ_VIRTUAL_HOST = rabbitmq_config['virtual_host']
 
-
 # mongodb 配置
 mongodb_config = config['mongodb']
 MONGODB_HOST = mongodb_config['host']
@@ -165,3 +158,6 @@ MONGO_DB = mongodb_config['db']
 MONGO_URL = mongodb_config['url']
 MONGO_COLL = mongodb_config['coll']
 
+# logger b
+logger_config = config['logger']
+LOGGER_SAVE_DIR = logger_config['saved']
