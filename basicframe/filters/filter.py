@@ -10,9 +10,10 @@ from urllib.parse import urlparse
 
 import pandas as pd
 from langdetect import detect
-from logs import logger
+from basicframe.utils.log import get_logger
 from tqdm import tqdm
 
+logger = get_logger('lw.txt')
 
 def read_xlsx(path):
     df = pd.read_excel(path)
