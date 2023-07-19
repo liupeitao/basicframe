@@ -16,7 +16,7 @@ XPATH_HASH_TABLE = {
         'lang': '//div[@class="article-meta"]/span[@class="lang"]/text()',
         'domain': '//div[@class="article-meta"]/span[@class="domain"]/text()',
         'subDomain': '//div[@class="article-meta"]/span[@class="subDomain"]/text()'
-    },
+    }
 }
 
 XPATH_HASH_KEY = "article_xpath_setting"
