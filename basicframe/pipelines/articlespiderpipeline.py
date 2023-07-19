@@ -20,7 +20,7 @@ class ArticleSpiderPipeline:
         dbx = mongo_client[dbName]
         self.post = dbx[coll]
 
-    def process_item(self, item):
+    def process_item(self, item, spider):
         carinfo = dict(item)
         print(carinfo)
 

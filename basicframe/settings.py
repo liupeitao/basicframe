@@ -33,7 +33,7 @@ DOWNLOAD_DELAY = 3
 # CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-# COOKIES_ENABLED = False
+COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
 # TELNETCONSOLE_ENABLED = False
@@ -152,12 +152,12 @@ RABBITMQ_VIRTUAL_HOST = rabbitmq_config['virtual_host']
 
 # mongodb 配置
 mongodb_config = config['mongodb']
-MONGODB_HOST = mongodb_config['host']
-MONGODB_PORT = mongodb_config['port']
-MONGO_DB = mongodb_config['db']
 MONGO_URL = mongodb_config['url']
+# MONGODB_HOST = mongodb_config['host']
+# MONGODB_PORT = mongodb_config['port']
+MONGO_DB = mongodb_config['db']
 MONGO_COLL = mongodb_config['coll']
 
-# logger b
+# logger 配置
 logger_config = config['logger']
 LOGGER_SAVE_DIR = logger_config['saved']

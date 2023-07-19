@@ -1,6 +1,6 @@
 # Redis配置
 redis:
-  host: 106.15.10.74
+  host: localhost
   port: 6379
   db: 0
   password: Liupeitao1.
@@ -15,12 +15,13 @@ mysql:
 
 # MongoDB配置
 mongodb:
-  host: localhost
-  port: 27017
-  database: mydatabase
   url: mongodb://root:root123456@localhost:27017/admin  # "mongodb://qychap:qyno11-d@158.247.243.169:18000/?authSource=admin"
   db: notes
   coll: articles
+#  host: localhost
+#  port: 27017
+#  database: mydatabase
+
 
 # Celery配置
 celery:

@@ -43,7 +43,6 @@ class ArticleSpider(RedisCrawlSpider):
         print(response.url, "============")
 
     def parse_item(self, response):
-
         yield self.iter_extractor(response)
 
     def goose_extractor(self, html):
@@ -53,8 +52,7 @@ class ArticleSpider(RedisCrawlSpider):
     def gne_extractor(self, html):
         extractor = GeneralNewsExtractor()
         result = extractor.extract(html)
-        return ArticleItem(title=result.get("title"), content=result.get("content"), ctime=int(time.time())
-                           )
+        return ArticleItem(title=result.get("title"), content=result.get("content"), ctime=int(time.time()))
 
     def iter_extractor(self, response: HtmlResponse):
         item = ArticleItem()
@@ -70,6 +68,4 @@ class ArticleSpider(RedisCrawlSpider):
             else:
                 continue
         item["content"] = "".join(response.xpath("//body//text()").extract())
-
-        print(item)
         return item
