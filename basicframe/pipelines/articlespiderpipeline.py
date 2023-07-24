@@ -21,7 +21,6 @@ class ArticleSpiderPipeline:
         self.post = dbx[coll]
 
     def process_item(self, item, spider):
-        carinfo = dict(item)
-        print(carinfo)
-
-        self.post.insert_one(carinfo)
+        if len(item['content']) > 200:
+            carinfo = dict(item)
+            self.post.insert_one(carinfo)

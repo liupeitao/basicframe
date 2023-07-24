@@ -6,14 +6,13 @@
     目前LanguageFilter 存在一些性能问题
 """
 import json
+import urllib.parse
 from urllib.parse import urlparse
 
 import pandas as pd
 from langdetect import detect
-from basicframe.utils.log import get_logger
-from tqdm import tqdm
 
-logger = get_logger('lw.txt')
+
 
 def read_xlsx(path):
     df = pd.read_excel(path)
@@ -25,6 +24,34 @@ class Filter:
         response = m3u8_url
         return True
 
+class NetFilter(Filter):
+    def __init__(self):
+        self.site_info_dict = None
+    def get_xinyuan_meta(self):
+        if self.site_info_dict:
+            self.site_info_dict
+        sheet_names = ['政治', '发布会']
+        self.site_info_dict = {}
+        for name in sheet_names:
+            df = pd.read_excel('/home/liupeitao/src/article-spiders-main/article_spider/spiders/xinyuan.xlsx', sheet_name=name).iloc[:, 2]
+            for url in df:
+                parsed_url = urllib.parse.urlparse(url)
+                if parsed_url.path == '/':
+                    url = parsed_url.netloc
+                    self.site_info_dict[url] = {'all': True}
+                else:
+                    url = parsed_url.netloc
+                    self.site_info_dict[url] = {'all': False, 'path': parsed_url.path}
+                self.site_info_dict[url]['domain'] = name
+        return self.site_info_dict
+
+    def do_filter(self, url, response, chain):
+        all_site_info = self.get_xinyuan_meta()
+        domain = urllib.parse.urlparse(url).netloc
+        if all_site_info[domain]['all']:
+            return True
+        else:
+            return urllib.parse.urlparse(url).path.startswith(all_site_info[domain]['path']) or all_site_info[domain]['path'] in url or 'politics' in url or 'Politics' in url
 
 class LanguageFilter(Filter):
     def __init__(self, lang):
@@ -81,20 +108,26 @@ def save_line(line, path):
 
 
 if __name__ == '__main__':
-    file = '/media/ptking/Elements/en.json'
-    xinyuan = '/home/ptking/xinyuan.xlsx'
-    lang_filter = LanguageFilter('en')
-    url_filter = XinYuanFilter(read_xlsx(xinyuan))
-    filter_chain = FilterChain()
-    filter_chain.add_filter(url_filter)
-    filter_chain.add_filter(lang_filter)
+    pass
+    # filter_chain = FilterChain()
+    # x = NetFilter()
+    # filter_chain.add_filter(x)
+    # print(filter_chain.do_filter('https://www.foxnews.com/us/nyc-mayor-eric-adams-says-no-more-room-migrants-cup-runneth-ove', '2'))
 
-    with open(file, mode='r') as f:
-        f.seek(0)
-        for index, line in tqdm(enumerate(f), total=10082988):
-            line_jsonfy = json.loads(line)
-            if filter_chain.do_filter(line_jsonfy, '2'):
-                save_line(line, f"eng/{line_jsonfy['domain']}.txt")
-            else:
-                pass
-            filter_chain.index = 0
+    # file = '/media/ptking/Elements/en.json'
+    # xinyuan = '/home/ptking/xinyuan.xlsx'
+    # lang_filter = LanguageFilter('en')
+    # url_filter = XinYuanFilter(read_xlsx(xinyuan))
+    # filter_chain = FilterChain()
+    # filter_chain.add_filter(url_filter)
+    # filter_chain.add_filter(lang_filter)
+    #
+    # with open(file, mode='r') as f:
+    #     f.seek(0)
+    #     for index, line in tqdm(enumerate(f), total=10082988):
+    #         line_jsonfy = json.loads(line)
+    #         if filter_chain.do_filter(line_jsonfy, '2'):
+    #             save_line(line, f"eng/{line_jsonfy['domain']}.txt")
+    #         else:
+    #             pass
+    #         filter_chain.index = 0

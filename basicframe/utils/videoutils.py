@@ -1,5 +1,6 @@
 import math
 import random
+from abc import abstractmethod
 
 
 class VideoUtils:
@@ -9,6 +10,7 @@ class VideoUtils:
         self._source = source
         self._save_dir = save_dir or ''
 
+    @abstractmethod
     def download(self):
         pass
 
