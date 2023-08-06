@@ -9,7 +9,8 @@
 import os
 
 BOT_NAME = "basicframe"
-
+RETRY_ENABLED = True
+RETRY_TIMES: 3
 # BOT_NAME = "articlex_spider"
 
 SPIDER_MODULES = ["basicframe.spiders"]
@@ -22,7 +23,7 @@ NEWSPIDER_MODULE = "basicframe.spiders"
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 16
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -122,10 +123,6 @@ config = load_config(config_file)
 # 获取Redis配置
 # 获取Redis配置
 REDIS_CONFIG = config['redis']
-REDIS_HOST = REDIS_CONFIG['host']
-REDIS_PORT = REDIS_CONFIG['port']
-REDIS_DB = REDIS_CONFIG['db']
-REDIS_PASSWORD = REDIS_CONFIG['password']
 REDIS_URL = REDIS_CONFIG['url']
 
 # 获取MySQL配置
@@ -153,8 +150,6 @@ RABBITMQ_VIRTUAL_HOST = rabbitmq_config['virtual_host']
 # mongodb 配置
 mongodb_config = config['mongodb']
 MONGO_URL = mongodb_config['url']
-# MONGODB_HOST = mongodb_config['host']
-# MONGODB_PORT = mongodb_config['port']
 MONGO_DB = mongodb_config['db']
 MONGO_COLL = mongodb_config['coll']
 

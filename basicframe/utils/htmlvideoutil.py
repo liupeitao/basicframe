@@ -8,8 +8,8 @@ class HtmlVideoUtil(VideoUtils):
         self.downloader = downloader
 
     def get_duration(self):
-        if self._duration != 0:
-            return self._duration
+        if self.duration != 0:
+            return self.duration
         try:
             url = self.path
             duration = self.downloader.get_duration(url)
@@ -21,7 +21,7 @@ class HtmlVideoUtil(VideoUtils):
 
     @property
     def path(self):
-        return self._path
+        return self.path
 
     def download(self):
         self.downloader.download_video(self.path, output_dir=self.generate_std_name())

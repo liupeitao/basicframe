@@ -1,6 +1,7 @@
 import functools
 import time
 
+import requests
 from tqdm import tqdm
 
 
@@ -56,4 +57,24 @@ def request_with_progress(method):
             response._content += data
         progress_bar.close()
         return response
+    return wrapper
+
+
+@request_with_progress
+def make_request(url):
+    return requests.get(url, stream=True)
+
+
+
+def singleton(cls):
+    """
+    Singleton Decorator
+    """
+    instance = None
+    def wrapper(*args, **kwargs):
+        nonlocal instance
+        if instance is None:
+            instance = cls(*args, **kwargs)
+        return instance
+
     return wrapper

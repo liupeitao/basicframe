@@ -6,10 +6,10 @@ POOL = redis.ConnectionPool.from_url(settings.REDIS_URL)
 
 class RedisClient:
     def __init__(self, host=None, port=None, db=None, password=None):
-        self.host = host or settings.REDIS_HOST
-        self.port = port or settings.REDIS_PORT
-        self.db = db or settings.REDIS_DB
-        self.password = password or settings.REDIS_PASSWORD
+        self.host = host
+        self.port = port
+        self.db = db
+        self.password = password
 
     def connect(self):
         return redis.Redis(connection_pool=POOL) or redis.from_url(settings.REDIS_URL)

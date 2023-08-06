@@ -1,10 +1,6 @@
 # Redis配置
 redis:
-  host: 101.35.228.6
-  port: 6379
-  db: 0
-  password:
-  url: redis://:qunyin@123@101.35.228.6:6379/0
+  url: redis://:qunyin@123@101.35.228.6:6379/2
 # MySQL配置
 mysql:
   host: 106.15.10.74
@@ -15,19 +11,9 @@ mysql:
 
 # MongoDB配置
 mongodb:
-  url: mongodb://root:root123456@localhost:27017/admin  # "mongodb://qychap:qyno11-d@158.247.243.169:18000/?authSource=admin"
-  db: notew
-  coll: articlew
-#  host: localhost
-#  port: 27017
-#  database: mydatabase
-
-
-# Celery配置
-celery:
-  broker_url: redis://:Liupeitao1.@localhost:6379/1
-  result_backend: redis://:Liupeitao1.@localhost:6379/13
-  # 其他Celery配置参数...
+  url: mongodb://root:root123456@106.15.10.74:27017/admin  # "mongodb://qychap:qyno11-d@158.247.243.169:18000/?authSource=admin"
+  db: defalult_db
+  coll: defalut_coll
 
 rabbitmq:
   host: localhost
@@ -35,6 +21,16 @@ rabbitmq:
   username: myuser
   password: mypassword
   virtual_host: myvhost
+
+# Celery配置
+celery:
+  broker_url: redis://:Liupeitao1.@localhost:6379/1
+  result_backend: redis://:Liupeitao1.@localhost:6379/13
+  # 其他Celery配置参数...
+
+token: Sl4Mb6TgyMUis0ic74QWJnVV3G8k6Ic_FSAoRKgtndspoQIsYiKsNKCkPyFrZbIDzMQs6CSM8cvt22ZYmFiMUg==
+org: ptking
+url: http://localhost:8086
 
 logger:
   saved: ../assets/logs

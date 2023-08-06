@@ -16,15 +16,14 @@ class Wenben(BasicOperator):
         for file in file_list:
             print("正在计算：", file, end='')
             acc += self.get_count_per_file(file)
-            print("      ", acc, "条")
         return acc
 
     def get_count_per_file(self, file):
+        count = 0
         with open(file, mode='r', encoding='utf-8', errors='ignore') as f:
-            # text = f.read()
-            # return len(self.ITEM_PATTER.findall(text))
-            lines = f.readlines()
-            return len(lines)
+            for line in f:
+                count += 1
+        return count
 
     def get_file_by_type(self, dir, type_set: set()):
         file_list = self.get_all_file(dir)
@@ -57,7 +56,7 @@ class Wenben(BasicOperator):
         lang_list = self.get_all_lang(dir)
         lang_total = []
         for lang in lang_list:
-            frame, acc = self.dir_to_csv11(lang)
+            frame, acc = self.get_dir_frame(lang)
             lang_frames.append(frame)
             lang_total.append(acc)
         total_list = [(lang_name, acc) for lang_name, acc in zip(os.listdir(dir), lang_total)]
@@ -82,7 +81,7 @@ class Wenben(BasicOperator):
         with pd.ExcelWriter(f"summary_{self.format_date}.xlsx") as writer:
             frame.to_excel(writer, sheet_name="summary", index=False)
 
-    def dir_to_csv11(self, dir):
+    def get_dir_frame(self, dir):
         sub_dir_list = self._get_sub_dir_name(dir)
         dir_info = []
         acc = 0
@@ -103,18 +102,6 @@ class Wenben(BasicOperator):
             lang_list.append(os.path.join(dir, lang_dir))
         return lang_list
 
-    def read_file(self, file):
-        with open(file, mode='r', encoding='utf-8', errors='ignore') as f:
-            text = f.read()
-            try:
-                str_list = eval(text)
-                text = ''.join(str_list)
-            except Exception as e:
-                return
-
-        with open(file, mode='w', encoding='utf-8', errors='ignore') as f:
-            f.write(text)
-
     def scatter_domains(self, line, save_dir, domain):
         with open(os.path.join(save_dir, domain), mode='a') as f:
             f.write(line + '\n')
@@ -131,22 +118,4 @@ class Wenben(BasicOperator):
 
 
 if __name__ == '__main__':
-    wb = Wenben()
-
-    # cat 越南语-张康.json | grep -oP '(?<="domain": ")[^"]+' | sort | uniq > domains
-    src = '/media/ptking/Elements/文本-待修复-暂不提交/越南語articles_1000条.json'
-    save_dir = '/media/ptking/Elements/文本-待修复-暂不提交/yuenan'
-    domains_file = open('/media/ptking/Elements/文本-待修复-暂不提交/domains', mode='r')
-    domains = domains_file.readlines()
-    domains = [domain.strip() for domain in domains]
-    print(domains)
-    with open(src, mode='r') as f:
-        while f.readline():
-            aline = f.readline()
-            aline = aline.strip()
-            for domain in domains:
-                if domain in aline:
-                    wb.scatter_domains(aline, save_dir, domain)
-                    break
-                else:
-                    continue
+    pass

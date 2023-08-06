@@ -74,5 +74,5 @@ class YouGetDownloader(Downloader):
     def get_duration(url):
         return 0
 
-# if __name__ == '__main__':
-#     print(YtDlpDownloader.get_video_info('https://www.bilibili.com/video/BV1ns4y1F7EQ/?spm_id_from=333.1007.0.0'))
+if __name__ == '__main__':
+    print(YtDlpDownloader.get_video_info('https://www.bilibili.com/video/BV1ns4y1F7EQ/?spm_id_from=333.1007.0.0'))

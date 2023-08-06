@@ -1,32 +1,26 @@
 import math
-import random
 from abc import abstractmethod
 
 
 class VideoUtils:
-    def __init__(self, path_id=random.randint(0, 100000), source='tmp', save_dir='/tmp'):
+    def __init__(self, video_source):
         self._duration = 0
-        self._path = path_id or ''
-        self._source = source
-        self._save_dir = save_dir or ''
+        self._video_source = video_source or ''
 
     @abstractmethod
     def download(self):
         pass
 
     def generate_std_name(self):
-        return f"{self.source}_{math.ceil(self.get_duration())}_{self.path.replace('/', '_').replace(':', '_').replace('.', '_')}.mp4"
+        return f"{math.ceil(self._duration)}_{self._video_source.replace('/', '_').replace(':', '_').replace('.', '_')}.mp4"
 
-    def get_duration(self):
+    @abstractmethod
+    def _get_duration(self) -> int:
         return self._duration
 
     @property
-    def path(self):
-        return self._path
-
-    @property
-    def source(self):
-        return self._source
+    def video_source(self):
+        return self._video_source
 
     @property
     def save_dir(self):
@@ -34,4 +28,6 @@ class VideoUtils:
 
     @property
     def duration(self):
-        return self._duration
+        return self._get_duration()
+
+

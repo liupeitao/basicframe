@@ -10,12 +10,12 @@ from scrapy.spiders import Rule
 from scrapy_redis.spiders import RedisCrawlSpider
 
 from basicframe.filters.filter import FilterChain, NetFilter
-from basicframe.items.articleitems import ArticleItem
+from basicframe.items.items import ArticleItem
 from basicframe.spiders.extractors.link_extractor import ArticleLinkExtractor
 
 
 class ArticleSpider(RedisCrawlSpider):
-    name = 'ArticleSpider'
+    name = 'test'
     redis_key = "article_spider:start_urls"
     max_idle_time = 7111
     # allowed_domains = ["www.liaoxuefeng.com"]
@@ -28,17 +28,11 @@ class ArticleSpider(RedisCrawlSpider):
 
     rules = (
         Rule(link_extractor=article_xpath_extractor,
-             callback='parse_item',
-             process_request='process_request_callback'
-             ),
+             callback='parse_item', process_request="process_request_callback"),
         Rule(link_extractor=article_link_extractor,
-             callback='parse_item',
-             process_request='process_request_callback'
-             ),
+             callback='parse_item', process_request="process_request_callback"),
         Rule(ArticleLinkExtractor(allow="/page", target="page", canonicalize=False),
-             callback='parse_page', follow=True,
-             process_request='process_request_callback'
-             ),
+             callback='parse_page', follow=True),
     )
 
     def process_request_callback(self, request: scrapy.Request, response):
