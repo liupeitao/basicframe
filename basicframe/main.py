@@ -6,7 +6,7 @@ def execute_spider(spider_name):
 
 
 def main():
-    spider_names = ['tribalfootball', 'xyafwej']
+    spider_names = ['tribalfootball']
     for spider_name in spider_names:
         execute_spider(spider_name)
 

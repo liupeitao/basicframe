@@ -12,7 +12,7 @@ class TribalfootballSpider(CrawlSpider):
     name = "tribalfootball"
     allowed_domains = ["www.tribalfootball.com"]
     def start_requests(self):
-        with open('b.txt', mode='r') as f:
+        with open('basicframe/b.txt', mode='r') as f:
             for url in f:
                 url = url.strip()
                 yield scrapy.Request(url=url)
