@@ -23,18 +23,17 @@ NEWSPIDER_MODULE = "basicframe.spiders"
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 32
-
+CONCURRENT_REQUESTS = 100
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 DOWNLOAD_DELAY = 0.2
 # The download delay setting will honor only one of:
-# CONCURRENT_REQUESTS_PER_DOMAIN = 16
-# CONCURRENT_REQUESTS_PER_IP = 16
+CONCURRENT_REQUESTS_PER_DOMAIN = 100
+CONCURRENT_REQUESTS_PER_IP = 100
 
 # Disable cookies (enabled by default)
-COOKIES_ENABLED = True
+COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 # TELNETCONSOLE_ENABLED = False
@@ -68,7 +67,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     # "basicframe.pipelines.BasicframePipeline": 301,
-    "basicframe.pipelines.articlespiderpipeline.ArticleSpiderPipeline": 302
+    "basicframe.pipelines.articlespiderpipeline.ArticleSpiderPipeline": 301
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -91,6 +90,18 @@ ITEM_PIPELINES = {
 # HTTPCACHE_DIR = "httpcache"
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
+SCHEDULER_PRIORITY_QUEUE = 'scrapy.pqueues.DownloaderAwarePriorityQueue'
+REACTOR_THREADPOOL_MAXSIZE = 20
+LOG_LEVEL = 'INFO'
+RETRY_ENABLED = False
+
+DOWNLOAD_TIMEOUT = 15
+REDIRECT_ENABLED = False
+
+
+DEPTH_PRIORITY = 1
+SCHEDULER_DISK_QUEUE = 'scrapy.squeues.PickleFifoDiskQueue'
+SCHEDULER_MEMORY_QUEUE = 'scrapy.squeues.FifoMemoryQueue'
 
 # Set settings whose default value is deprecated to a future-proof value
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"

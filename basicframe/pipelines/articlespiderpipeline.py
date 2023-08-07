@@ -7,9 +7,9 @@ import scrapy
 # from itemadapter import ItemAdapter
 from scrapy.utils.project import get_project_settings
 
-from basicframe.midwares.mongodbclient import mongo_client
+from basicframe.midwares.mongodbclient import MongoDBClient
 
-
+mongo_client = MongoDBClient().connect()
 class ArticleSpiderPipeline:
     settings = get_project_settings()
 
@@ -19,7 +19,7 @@ class ArticleSpiderPipeline:
 
     def process_item(self, item: scrapy.Item, spider: scrapy.Spider):
         if len(item['content']) > 200:
-            coll_name = item.get('netloc') or spider.name
+            coll_name = spider.name
             collection = self.db[coll_name]
             item = dict(item)
             collection.insert_one(item)
