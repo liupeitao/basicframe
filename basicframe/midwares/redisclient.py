@@ -20,16 +20,18 @@ class RedisClient:
         return self.redis_conn
 
     @staticmethod
-    def save_site_info_to_redis(name, domain,  **kwargs):
+    def save_site_info_to_redis(name, domain, **kwargs):
         r = RedisClient().connect()
         r.hset(name, domain, json.dumps(kwargs))
 
     @staticmethod
     def get_site_info_from_redis(name, domain) -> dict:
         r = RedisClient().connect()
-        domain_info_dict = r.hget(name, domain)
-        return json.loads(domain_info_dict.decode())
+        domain_info_dict = r.hget(name, domain) or {}
+        return dict(json.loads(domain_info_dict.decode()))
 
+
+from basicframe.siteinfosettings import SITE_INFO_TABLE
 
 if __name__ == '__main__':
     domain_info = {
@@ -39,10 +41,15 @@ if __name__ == '__main__':
             'item_allow': r'the-war-zone',
             'page_allow': r'page',
             'item_xpath_restrict': '//*[@id="incCont"]/div/article',
-            'page_xpath_restrict': '//*[@id="pagCont"]/div/nav//@href'
+            'page_xpath_restrict': '//*[@id="pagCont"]/div/nav//a'
         }
     }
-    domain = 'https://www.thedrive.com/the-war-zone'
+
+    site1 = 'https://www.thedrive.com/the-war-zone'
+    site2 = 'https://www.cbsnews.com/politics/'
     name = '多语种文本采集'
-    # RedisClient.save_site_info_to_redis("多语种文本采集", domain, **domain_info)
+
+    RedisClient.save_site_info_to_redis("多语种文本采集", site1, **SITE_INFO_TABLE.get(site1))
+
+    RedisClient.save_site_info_to_redis("多语种文本采集", site2, **SITE_INFO_TABLE.get(site2))
     # print(json.loads(RedisClient.get_site_info_from_redis(name, domain))

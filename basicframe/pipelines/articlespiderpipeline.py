@@ -18,7 +18,7 @@ class ArticleSpiderPipeline:
 
 
     def process_item(self, item: scrapy.Item, spider: scrapy.Spider):
-        if len(item['content']) > 200:
+        if len(item['content']) > 100:
             coll_name = spider.name
             collection = self.db[coll_name]
             item = dict(item)
