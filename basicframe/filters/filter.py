@@ -27,14 +27,18 @@ class Filter:
 class NetFilter(Filter):
     def __init__(self):
         self.site_info_dict = None
+        self.excel_file_path = '/home/ptking/多语种-文本-20230615.xlsx'
     def get_xinyuan_meta(self):
         if self.site_info_dict:
-            self.site_info_dict
-        sheet_names = ['政治', '发布会']
+            return self.site_info_dict
         self.site_info_dict = {}
+        excel_file = pd.ExcelFile(self.excel_file_path)
+        sheet_names = excel_file.sheet_names
         for name in sheet_names:
-            df = pd.read_excel('/home/liupeitao/src/article-spiders-main/article_spider/spiders/xinyuan.xlsx', sheet_name=name).iloc[:, 2]
+            df = pd.read_excel(self.excel_file_path, sheet_name=name).iloc[:, 5]
             for url in df:
+                if url is not str:
+                    continue
                 parsed_url = urllib.parse.urlparse(url)
                 if parsed_url.path == '/':
                     url = parsed_url.netloc

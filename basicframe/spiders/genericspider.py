@@ -48,6 +48,6 @@ class GenericSpider(CrawlSpider):
     def parse_all(self, response: HtmlResponse):
         detail = 'xxxxxx'
         if response.url is detail:
-            yield self.parse_item(response)
+            yield from self.parse_item(response)
         else:
-            return self.parse_page(response)
+            yield self.parse_page(response)
