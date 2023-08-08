@@ -10,7 +10,7 @@ import os
 
 BOT_NAME = "basicframe"
 RETRY_ENABLED = True
-RETRY_TIMES: 5
+RETRY_TIMES: 3
 # BOT_NAME = "articlex_spider"
 
 SPIDER_MODULES = ["basicframe.spiders"]
@@ -27,7 +27,7 @@ CONCURRENT_REQUESTS = 100
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 0.2
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 100
 CONCURRENT_REQUESTS_PER_IP = 100

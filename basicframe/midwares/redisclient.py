@@ -1,7 +1,6 @@
 import json
 
 import redis
-
 import basicframe.settings as settings
 
 POOL = redis.ConnectionPool.from_url(settings.REDIS_URL)
@@ -27,7 +26,6 @@ class RedisClient:
 
 
     def rsave_site_info_to_redis(self, name, domain, **kwargs):
-        kwargs['网址新增日期'] = kwargs['网址新增日期'].strftime('%Y-%m-%d %H:%M:%S')
         self.connect().hset(name, domain, json.dumps(kwargs, ensure_ascii=False))
 
     @staticmethod
