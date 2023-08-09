@@ -25,12 +25,12 @@ def extractor_articel(response: HtmlResponse, site_info: dict) -> ArticleItem:
     item['url'] = response.url
     item["domain"] = site_info.get('domains')
     item['yield_time'] = math.ceil(time.time())
-    for extractor in (gne_extractor, goose_extractor):
-        ext = extractor(response.text)
-        if ext["content"]:
+    for extractor in (goose_extractor, gne_extractor):
+        try:
+            ext = extractor(response.text)
             item["title"] = ext["title"]
             item["content"] = ext["content"]
             return item
-        else:
+        except Exception as e:
             continue
     return item

@@ -1,23 +1,15 @@
 import scrapy
-from scrapy import Request
 from scrapy.http import HtmlResponse
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders.crawl import Rule, CrawlSpider
-from scrapy.http import HtmlResponse
 
-from basicframe.items.items import ArticleItem
-from basicframe.midwares.redisclient import RedisClient
+from basicframe.playground.spot import judge_list_by_html
 from basicframe.spiders.extractors.articelextractor import extractor_articel
-
-from basicframe.playground.spot import judge_list, judge_list_by_html
 
 url_set = set()
 
-
 class GenericSpider(CrawlSpider):
-    name = "generalspider"
-
-    start_url = []
+    name = ''
     # site_info = RedisClient.get_site_info_from_redis('多语种文本采集', name) or RedisClient.get_site_info_from_redis(
     #     '多语种文本采集', 'default')
     site_info = {'domains': '政治'}
@@ -40,11 +32,12 @@ class GenericSpider(CrawlSpider):
     )
 
     def start_requests(self):
-        yield scrapy.Request(url=self.name)
+        yield scrapy.Request(self.name)
 
     def process_page_request(self, request: scrapy.Request):
         request.priority = 2  # 越大月高
         return request
+
 
     def custom_process_links(self, links):
         ok_links = []
@@ -65,14 +58,10 @@ class GenericSpider(CrawlSpider):
                 return None
         yield extractor_articel(response, self.site_info)
 
+
     def parse_page(self, response):
         pass
 
     def parse_all(self, response: HtmlResponse):
         pass
-        # detail = 'xxxxxx'
-        # if response.url is detail:
-        #     pass
-        #     # yield from self.parse_item(response)
-        # else:
-        #     yield self.parse_page(response)
+

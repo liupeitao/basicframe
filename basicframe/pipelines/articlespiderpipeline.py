@@ -22,4 +22,5 @@ class ArticleSpiderPipeline:
             coll_name = spider.name
             collection = self.db[coll_name]
             item = dict(item)
+            print(item)
             collection.insert_one(item)

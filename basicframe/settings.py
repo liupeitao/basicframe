@@ -67,7 +67,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     # "basicframe.pipelines.BasicframePipeline": 301,
-    # "basicframe.pipelines.articlespiderpipeline.ArticleSpiderPipeline": 301
+    "basicframe.pipelines.articlespiderpipeline.ArticleSpiderPipeline": 301
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -94,8 +94,8 @@ ITEM_PIPELINES = {
 REACTOR_THREADPOOL_MAXSIZE = 20
 LOG_LEVEL = 'INFO'
 
-DOWNLOAD_TIMEOUT = 15
 REDIRECT_ENABLED = False
+DOWNLOAD_TIMEOUT = 60
 
 #
 # DEPTH_PRIORITY = 1
