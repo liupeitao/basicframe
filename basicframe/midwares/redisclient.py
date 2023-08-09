@@ -32,6 +32,9 @@ class RedisClient:
     def get_site_info_from_redis(name, domain) -> dict:
         r = RedisClient().connect()
         domain_info_dict = r.hget(name, domain) or {}
+        if not domain_info_dict:
+            return {}
+
         return dict(json.loads(domain_info_dict.decode()))
 
 

@@ -43,7 +43,7 @@ class MongoDBClient:
 def add_site_to_redis():
 
     # 读取 xlsx 文件
-    xlsx = pd.ExcelFile('/home/ptking/多语种-文本-20230615.xlsx')
+    xlsx = pd.ExcelFile('/home/liupeitao/多语种-文本-20230615.xlsx')
 
     # 读取每个工作表中的数据并转换为字典列表
     data = []

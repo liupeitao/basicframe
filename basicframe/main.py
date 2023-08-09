@@ -6,7 +6,7 @@ def execute_spider(spider_name):
 
 
 def main():
-    spider_names = ['https://www.thedrive.com/the-war-zone']
+    spider_names = ['https://www.cbsnews.com']
     for spider_name in spider_names:
         execute_spider(spider_name)
 
