@@ -3,7 +3,7 @@ from scrapy.utils.project import get_project_settings
 
 from basicframe.midwares.redisclient import RedisClient
 from basicframe.spiders.genericspider import GenericSpider
-from basicframe.utils.get_url import get_url_list
+from basicframe.utils.get_url import get_urls_from_page
 
 
 def send_start_to_redis():
@@ -12,7 +12,7 @@ def send_start_to_redis():
     for key in keys:
         print("process url:", key)
         key = key.decode()
-        url_list = get_url_list(key)
+        url_list = get_urls_from_page(key)
         for url in url_list:
             if 'page' in url:
                 print("可以抓取")

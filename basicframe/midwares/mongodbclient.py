@@ -47,18 +47,19 @@ def add_site_to_redis():
 
     # 读取每个工作表中的数据并转换为字典列表
     data = []
-    she = xlsx.sheet_names
+    she = xlsx.sheet_names[0:1]
+    sheet_data = []
     for sheet_name in she:
         df = pd.read_excel(xlsx, sheet_name)
         sheet_data = df.to_dict(orient='records')
-        data.append(sheet_data)
+        # data.append(sheet_data)
 
     # 打印每个工作表的数据
-    for sheet_data in data:
-        for row in sheet_data:
-            stripped_dict = {key.strip(): str(value) for key, value in row.items()}
+    # for sheet_data in data:
+    #     for row in sheet_data:
+    #         stripped_dict = {key.strip(): str(value) for key, value in row.items()}
 
-            mongo_client.save_site_info_to_mongodb('siteinfo', 'test', 'site_info_test', **stripped_dict)
+    mongo_client.connect()['articel']['siteinfo'].insert_many(sheet_data)
 
 
 if __name__ == '__main__':

@@ -1,22 +1,26 @@
 import subprocess
+from basicframe.test.logHandler import LogHandler
 
 
-def get_url_list(start_url):
+def get_urls_from_page(page_url):
+    logger = LogHandler(name='urlfinder', file=True)
     ret = subprocess.run(
-        args=['urlfinder', '-x', 'http://127.0.0.1:7890', '-u', start_url],
+        args=['urlfinder', '-x', 'http://127.0.0.1:7890', '-u', page_url],
         stdout=subprocess.PIPE)
     try:
-        res = ret.stdout.decode('utf-8')
+        url_list = ret.stdout.decode('utf-8')
     except UnicodeDecodeError as e:
-        print(e.start)
-        print(e)
-        print("error url", start_url)
+        logger.error(f"{page_url} {e} url can't decode by utf-8")
         return []
+
     try:
-        res = res.split('URL to')[1]
-        url_list = []
-        for url in res.split('\n'):
-            url_list.append(url)
-        return list(set(url_list))
+        url_list = url_list.split('URL to')[1]
     except IndexError as e:
+        logger.error(f"{page_url} {e} urls urlfinder return isn't enough")
         return []
+
+    res = []
+    for url in url_list.split('\n'):
+        res.append(url)
+
+    return list(set(res))
