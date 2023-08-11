@@ -43,7 +43,7 @@ class MongoDBClient:
 def add_site_to_redis():
 
     # 读取 xlsx 文件
-    xlsx = pd.ExcelFile('/home/liupeitao/多语种-文本-20230615.xlsx')
+    xlsx = pd.ExcelFile('/home/ptking/多语种-文本-20230615.xlsx')
 
     # 读取每个工作表中的数据并转换为字典列表
     data = []
@@ -58,7 +58,7 @@ def add_site_to_redis():
         for row in sheet_data:
             stripped_dict = {key.strip(): str(value) for key, value in row.items()}
 
-            mongo_client.save_site_info_to_mongodb('siteinfo', 'test', 'site_info_test', **stripped_dict)
+            # mongo_client.save_site_info_to_mongodb('siteinfo', 'test', 'site_info_test', **stripped_dict)
 
 
 if __name__ == '__main__':
