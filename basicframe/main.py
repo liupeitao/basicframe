@@ -10,4 +10,4 @@ def main(spider_name):
 
 
 if __name__ == '__main__':
-    main()
+    main('http://www.enewstoday.co.kr/news/articleList.html?sc_section_code=S1N63&view_type=sm')

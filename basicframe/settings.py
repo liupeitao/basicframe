@@ -114,6 +114,7 @@ DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 
 # 解析yaml文件配置
 import yaml
+REDIRECT_ENABLED = True
 
 # 获取当前文件的目录路径
 current_dir = os.path.dirname(os.path.abspath(__file__))

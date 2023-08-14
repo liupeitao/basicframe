@@ -49,7 +49,8 @@ class LogHandler(logging.Logger):
     """
     def __init__(self, name, level=DEBUG, stream=True, file=True):
         self.level = level
-        logging.Logger.__init__(self, self.name, level=level)
+        self.name = name
+        logging.Logger.__init__(self, name=self.name, level=level)
         if stream:
             self.__setStreamHandler__()
         if file:

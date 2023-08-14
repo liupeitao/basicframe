@@ -1,3 +1,12 @@
+def contains_substring(text, substr_tuple):
+    for substr in substr_tuple:
+        if substr in text:
+            return True
+    return False
+
+
+page_substr_tuple = (r'page=', r'&page', r'page/\d+', r'index.\d+')
+
 SITE_INFO_TABLE = {
     'https://www.thedrive.com/the-war-zone': {
         'domains': '政治',
@@ -24,7 +33,7 @@ SITE_INFO_TABLE = {
         'selector': {
             'type': 'Partial | Static',
             'item_allow': [r'news', 'article', 'item'],
-            'page_allow': ['page', r'/(\d+)/', 'next', 'late', 'before'],
+            'page_allow': ['page', r'/(\d+)/', 'next', 'late', 'before', r'index.\d+'],
             # 'item_xpath_restrict': ['//article', 'content', '//table'],
             # 'page_xpath_restrict': "//*[contains(text(), 'page') or contains(text(), 'next')]"
         }
