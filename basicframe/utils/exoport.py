@@ -27,7 +27,7 @@ import re
 
 def process_one_coll(collection, file_name):
     data = collection.find({}, {'_id': 0})
-    with open(f"assets/{file_name}.json", "w") as file:
+    with open(f"../assets/{file_name}.json", "w") as file:
         for document in data:
             # if not document['url'] in all_url:
             print(document)
@@ -37,12 +37,12 @@ def process_one_coll(collection, file_name):
     print("数据已成功导出到 data.json 文件中")
 
 
-from basicframe.midwares.mongodbclient import mongo_client
-client = mongo_client
-db = client["articel"]  # 替换为你要导出的数据库名字
-collection_names = db.list_collection_names()
+from basicframe.midwares.mongodbclient import MongoDBClient
+client = MongoDBClient().connect()
+db = client["defalult_db"]  # 替换为你要导出的数据库名字
+# collection_names = db.list_collection_names()
 
-process_one_coll(db['fabuhuic'], 'fabuhuic')
+process_one_coll(db['https://www.thedrive.com/the-war-zone'], 'thedrive_政治_0815')
 #
 # for name in collection_names:
 #     process_one_coll(db[name], name)

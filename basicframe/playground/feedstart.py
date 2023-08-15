@@ -1,3 +1,5 @@
+import urllib.parse
+
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
@@ -41,7 +43,7 @@ def start_scrapy(start_url):
     process = CrawlerProcess(get_project_settings())
 
     # 将爬虫添加到CrawlerProcess中
-    process.crawl(GenericSpider, name=start_url)
+    process.crawl(GenericSpider, name=start_url, allowed_domains=[f'{urllib.parse.urlparse(start_url).netloc}'])
 
     # 启动爬虫
     process.start()
@@ -60,7 +62,7 @@ if __name__ == '__main__':
     # logger.info(f'start_scrapy ... {url}')
 
     # url = url.decode()
-    url = 'http://www.hkbs.co.kr/news/articleList.html?sc_section_code=S1N3&view_type=sm'
+    url = 'https://en.as.com/news/champions-league/'
     url = process_url(url)
     start_scrapy(url)
     # 某些网站需要重定向http://www.jjan.kr/news/articleList.html?sc_section_code=S1N31&view_type=sm

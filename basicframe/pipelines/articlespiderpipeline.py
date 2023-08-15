@@ -3,6 +3,7 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import scrapy
+from datetime import datetime
 # useful for handling different item types with a single interface
 # from itemadapter import ItemAdapter
 from scrapy.utils.project import get_project_settings
@@ -19,8 +20,14 @@ class ArticleSpiderPipeline:
 
     def process_item(self, item: scrapy.Item, spider: scrapy.Spider):
         if len(item['content']) > 100:
-            coll_name = spider.name
+            coll_name = self.generate_name(spider.name)
             collection = self.db[coll_name]
             item = dict(item)
             print(item)
             collection.insert_one(item)
+
+
+    def generate_name(self, str):
+        now = datetime.now()
+        time_str = now.strftime("%Y_%m_%d")
+        return f"{time_str}_{str}"

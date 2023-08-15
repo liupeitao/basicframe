@@ -1,4 +1,5 @@
 import urllib.parse
+from datetime import datetime
 
 import scrapy
 from scrapy.http import HtmlResponse
@@ -12,13 +13,10 @@ from basicframe.utils.util import generate_std_name
 recent_urls_set = set()
 # 适用于部分分页。会有一点误差。
 class GenericSpider(CrawlSpider):
-    # name = 'http://www.enewstoday.co.kr/news/articleList.html?sc_section_code=S1N63&view_type=sm'
-    # name = ''
-
-    site_info = {'domains': '政治'}
+    site_info = {'domains': '欧冠'}
     rules = (
-        Rule(LinkExtractor(allow=('page=', '&page', 'page/\\d+')),
-             callback='parse_item', follow=False, process_links='page_links'),
+        Rule(LinkExtractor(allow=('page=', '&page', '/page/', r'/\d+/$'), restrict_xpaths='//*[not(self::header or ancestor::header)]'),
+             follow=True, process_links='page_links'),
         Rule(LinkExtractor(),
              callback='parse_item', follow=False, process_links='custom_process_links'),
     )
@@ -28,6 +26,7 @@ class GenericSpider(CrawlSpider):
 
     def start_requests(self):
         yield scrapy.Request(self.name)
+
 
     def process_page_request(self, request: scrapy.Request):
         request.priority = 2  # 越大月高
