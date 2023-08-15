@@ -11,30 +11,37 @@ from basicframe.test.logHandler import LogHandler
 from basicframe.utils.util import generate_std_name
 
 recent_urls_set = set()
+from basicframe.siteinfosettings import Partial_Static_Crawling as P_S_C
+
+
 # 适用于部分分页。会有一点误差。
 class GenericSpider(CrawlSpider):
+
     site_info = {'domains': '欧冠'}
     rules = (
-        Rule(LinkExtractor(allow=('page=', '&page', '/page/', r'/\d+/$'), restrict_xpaths='//*[not(self::header or ancestor::header)]'),
-             follow=True, process_links='page_links'),
+        Rule(LinkExtractor(allow=P_S_C['page_allow_tuple'], restrict_xpaths=P_S_C['page_restrict_xpaths']),
+             follow=True, process_links='process_page_links', process_request='process_page_request'),
         Rule(LinkExtractor(),
              callback='parse_item', follow=False, process_links='custom_process_links'),
     )
-    def page_links(self, links):
-        return links
 
+    def process_page_links(self, links):
+        processed_urls = self.not_recent_processed_links(links)
+        return processed_urls
 
     def start_requests(self):
+
         yield scrapy.Request(self.name)
 
-
-    def process_page_request(self, request: scrapy.Request):
-        request.priority = 2  # 越大月高
+    def process_page_request(self, request: scrapy.Request, response):
+        # request.priority = 2  # 越大月高
+        self.spider_logger.info(f"processing page: {request.url}")
         return request
 
     def custom_process_links(self, links):
         processed_urls = self.not_recent_processed_links(links)
         return processed_urls
+
     def parse_item(self, response: HtmlResponse):
         yield extractor_articel(response, self.site_info)
 
@@ -43,7 +50,6 @@ class GenericSpider(CrawlSpider):
 
     def parse_all(self, response: HtmlResponse):
         pass
-
 
     @staticmethod
     def not_recent_processed_links(links):
@@ -55,3 +61,4 @@ class GenericSpider(CrawlSpider):
         if len(recent_urls_set) == 8192:
             recent_urls_set.clear()
         return ok_links
+

@@ -16,15 +16,15 @@ class ArticleSpiderPipeline:
 
     def open_spider(self, spider: scrapy.Spider):
         self.db = mongo_client[spider.settings['MONGO_DB']]
+        coll_name = self.generate_name(spider.name)
+        self.collection = self.db[coll_name]
 
 
     def process_item(self, item: scrapy.Item, spider: scrapy.Spider):
         if len(item['content']) > 100:
-            coll_name = self.generate_name(spider.name)
-            collection = self.db[coll_name]
             item = dict(item)
             print(item)
-            collection.insert_one(item)
+            self.collection.insert_one(item)
 
 
     def generate_name(self, str):
