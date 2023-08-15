@@ -60,7 +60,7 @@ if __name__ == '__main__':
     # logger.info(f'start_scrapy ... {url}')
 
     # url = url.decode()
-    url = 'http://www.ujeil.com/news/articleList.html?sc_section_code=S1N6&view_type=sm:dupefilter'
+    url = 'http://www.hkbs.co.kr/news/articleList.html?sc_section_code=S1N3&view_type=sm'
     url = process_url(url)
     start_scrapy(url)
     # 某些网站需要重定向http://www.jjan.kr/news/articleList.html?sc_section_code=S1N31&view_type=sm

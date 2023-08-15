@@ -24,8 +24,8 @@ rabbitmq:
 
 # Celery配置
 celery:
-  broker_url: redis://:Liupeitao1.@localhost:6379/1
-  result_backend: redis://:Liupeitao1.@localhost:6379/13
+  broker_url: pyamqp://guest:guest@localhost:5672//
+  result_backend: redis://:qunyin@123@101.35.228.6:6379/9
   # 其他Celery配置参数...
 
 token: Sl4Mb6TgyMUis0ic74QWJnVV3G8k6Ic_FSAoRKgtndspoQIsYiKsNKCkPyFrZbIDzMQs6CSM8cvt22ZYmFiMUg==

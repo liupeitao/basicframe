@@ -3,7 +3,7 @@ from kombu import Queue, Exchange
 from basicframe import settings
 
 
-result_backend = settings.CELERY_BROKER_URL
+result_backend = settings.CELERY_RESULT_BACKEND
 broker = settings.CELERY_BROKER_URL
 
 task_default_queue = 'default'
@@ -22,10 +22,10 @@ enable_utc = True
 # #（井号）：匹配零个或多个关键字。
 # .（点号）：用于分隔关键字。
 
+news_processing_exchange = Exchange('news_processing_exchange', type='topic')
 task_queues = (
     Queue('default', routing_key='task.#'),
-    Queue('feed_tasks', routing_key='feed.#', bindings=[Exchange('feed_task', type='topic', durable=False)]),
-    Queue('url_down_tasks', routing_key='url_down.#', bindings=[Exchange('feed_task', type='topic', durable=False)])
+    Queue('news_processing_queue', exchange=news_processing_exchange,routing_key='news_processing#'),
 )
 
 # task_routes = {

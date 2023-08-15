@@ -18,7 +18,7 @@ class GenericSpider(CrawlSpider):
     site_info = {'domains': '政治'}
     rules = (
         Rule(LinkExtractor(allow=('page=', '&page', 'page/\\d+')),
-             callback='parse_item', follow=True, process_links='page_links'),
+             callback='parse_item', follow=False, process_links='page_links'),
         Rule(LinkExtractor(),
              callback='parse_item', follow=False, process_links='custom_process_links'),
     )
