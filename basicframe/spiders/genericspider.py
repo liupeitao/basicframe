@@ -24,8 +24,7 @@ class GenericSpider(CrawlSpider):
         Rule(LinkExtractor(),
              callback='parse_item',
              follow=False,
-             process_links='custom_process_links',
-             process_request='process_detail_request'),
+             process_links='custom_process_links'),
     )
 
     def process_page_links(self, links):
@@ -41,9 +40,6 @@ class GenericSpider(CrawlSpider):
         request.meta['page_type'] = 'PAGE_TYPE'
         request.meta['max_retry_times'] = 3
         return request
-
-    def process_detail_request(self, request: scrapy.Request, response):
-        self.spider_logger.info(f'processing detail: {request.url}')
 
     def custom_process_links(self, links):
         processed_urls = self.not_recent_processed_links(links)
