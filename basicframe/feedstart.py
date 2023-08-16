@@ -6,6 +6,7 @@ from scrapy.utils.project import get_project_settings
 
 from basicframe.midwares.redisclient import RedisClient
 from basicframe.siteinfosettings import contains_substring, Partial_Static_Crawling as P_S_C
+from basicframe.spiders.fullsitespider import FullSiteSpider
 from basicframe.spiders.genericspider import GenericSpider
 from basicframe.utils.logHandler import LogHandler
 from basicframe.utils.peekurl import get_urls_from_page
@@ -61,6 +62,20 @@ def start_scrapy(start_url):
     process.start()
 
 
+
+def start_scrapy_full_site(start_url):
+    # 创建CrawlerProcess实例
+    process = CrawlerProcess(get_project_settings())
+    # 将爬虫添加到CrawlerProcess中
+    args = {
+        'name': start_url,
+        'allowed_domains': [f'{urllib.parse.urlparse(start_url).netloc}'],
+        'spider_logger': LogHandler(name=generate_name(start_url), file=True)
+    }
+    process.crawl(FullSiteSpider,  **args)
+    # 启动爬虫
+    process.start()
+
 def process_url(url):
     if '%' not in url:
         return url
@@ -85,6 +100,6 @@ def crawl_redis_url():
 
 
 if __name__ == '__main__':
-    crawl_redis_url()
+    start_scrapy_full_site('https://www.spacewar.com/')
     # url = 'https://en.as.com/news/champions-league/'
     # crawl_specific_url(url)
