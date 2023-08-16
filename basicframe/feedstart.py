@@ -16,6 +16,24 @@ from basicframe.utils.util import generate_std_name, current_date_time
 # def generate_name(str):
 #     return f"{current_date_time()}_{generate_std_name(str)}"
 
+from basicframe.midwares.mongodbclient import MongoDBClient
+
+def send_start_to_redis_from_mongo():
+    redis_client = RedisClient().connect()
+    mongo_client = MongoDBClient()
+    sites = mongo_client.get_address_values('articel', 'siteinfo', '地址')
+    for site in sites:
+        goal = 0
+        print("process url:", site)
+        url_list = get_urls_from_page(site)
+        for url in url_list:
+            if contains_substring(url, P_S_C['page_allow_tuple']):
+                goal += 1
+        if goal >= 4:
+            print("可以抓取")
+            redis_client.lpush("欧冠", site)
+
+
 def send_start_to_redis():
     redis_client = RedisClient().connect()
     keys = redis_client.hgetall('网站信息')
@@ -28,7 +46,7 @@ def send_start_to_redis():
         for url in url_list:
             if contains_substring(url, P_S_C['page_allow_tuple']):
                 goal += 1
-        if goal >= 4:
+        if goal >= 2:
             print("可以抓取")
             redis_client.lpush("静态部分网站", key)
 
@@ -100,7 +118,7 @@ def is_full():
 
 
 if __name__ == '__main__':
-    pass
+    send_start_to_redis_from_mongo()
     # start_scrapy_full_site('https://www.spacewar.com/')
     # url = 'https://en.as.com/news/champions-league/'
     # crawl_specific_url(url)

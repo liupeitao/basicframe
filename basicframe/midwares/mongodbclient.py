@@ -39,27 +39,49 @@ class MongoDBClient:
         else:
             return {}
 
+    from pymongo import MongoClient
+
+    def update_siteinfo_status(self, database_name, collection_name, new_status):
+        # 连接到 MongoDB
+        collection = MongoDBClient().connect()[database_name][collection_name]
+        # 更新所有文档的 siteinfo 字段，添加一个 status 字段
+        collection.update_many({}, {"$set": {"status": new_status}})
+
+    def get_address_values(self, database_name, collection_name, field_name):
+        # 连接到 MongoDB
+        client = MongoDBClient().connect()
+        db = client[database_name]
+        collection = db[collection_name]
+
+        # 查询所有文档并提取指定字段的值
+        field_values = []
+        for document in collection.find():
+            field_value = document.get(field_name)
+            if field_value:
+                field_values.append(field_value)
+
+        # 关闭 MongoDB 连接
+        client.close()
+
+        return field_values
 
 def add_site_to_redis():
 
     # 读取 xlsx 文件
-    xlsx = pd.ExcelFile('/home/liupeitao/多语种-文本-20230615.xlsx')
+    xlsx = pd.ExcelFile('/home/liupeitao/yingwenwenben20230816.xlsx')
 
     # 读取每个工作表中的数据并转换为字典列表
     data = []
-    she = xlsx.sheet_names[0:1]
+    she = xlsx.sheet_names[2:3]
     sheet_data = []
     for sheet_name in she:
         df = pd.read_excel(xlsx, sheet_name)
         sheet_data = df.to_dict(orient='records')
-        # data.append(sheet_data)
 
-    # 打印每个工作表的数据
-    # for sheet_data in data:
-    #     for row in sheet_data:
-    #         stripped_dict = {key.strip(): str(value) for key, value in row.items()}
+    mongo_client.connect()['articel']['siteinfo'].insert_many(sheet_data[40:])
 
-    mongo_client.connect()['articel']['siteinfo'].insert_many(sheet_data)
+
+
 
 
 if __name__ == '__main__':
@@ -72,8 +94,10 @@ if __name__ == '__main__':
     #         'page_xpath_restrict': '//pagination'
     #     }
     # }
-    domain = 'https://www.thedrive.com/the-war-zone'
-    mongo_client = MongoDBClient()
 
-    # mongo_client.save_site_info_to_mongodb(domain,  'test', 'site_info_test', **domain_info)
-    add_site_to_redis()
+    mongo_client = MongoDBClient()
+    # 调用封装的函数来更新数据
+    # mongo_client.update_siteinfo_status('articel','siteinfo',0)
+    url_list = mongo_client.get_address_values('articel','siteinfo','地址')
+    for url in url_list:
+        print(url)

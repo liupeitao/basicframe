@@ -34,7 +34,7 @@ def start_scrapy_full_site(start_url):
     args = {
         'name': start_url,
         'allowed_domains': [f'{urllib.parse.urlparse(start_url).netloc}'],
-        'spider_logger': LogHandler(name=generate_name(start_url), file=True)
+        'spider_logger': LogHandler(name=f"crawling/{generate_name(start_url)}", file=True)
     }
     process.crawl(FullSiteSpider, **args)
     # 启动爬虫
@@ -55,7 +55,7 @@ def crawl_specific_url(url):
 
 def crawl_redis_url():
     redis_client = RedisClient().connect()
-    url = redis_client.lpop('静态部分网站').decode()
+    url = redis_client.lpop('欧冠').decode()
     logger = LogHandler(name='start_scrapy', file=True)
     logger.info(f'start_scrapy ... {url}')
     crawl_specific_url(url)
@@ -78,5 +78,6 @@ def start_crawl_site(spider_type, start_url):
 
 if __name__ == '__main__':
     spider_type = [FullSiteSpider, GenericSpider]
-    # start_scrapy_full_site('https://www.spacewar.com/')
-    start_crawl_site(FullSiteSpider, 'https://www.spacewar.com/')
+    # crawl_redis_url()
+    crawl_specific_url('https://www.sportskeeda.com/go/serie-a-calcio/news')
+    # crawl_specific_url('https://www.dailymail.co.uk/sport/copa_america/index.html')

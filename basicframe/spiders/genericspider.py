@@ -12,7 +12,7 @@ from basicframe.siteinfosettings import Partial_Static_Crawling as P_S_C
 # 适用于部分分页。会有一点误差。
 class GenericSpider(CrawlSpider):
 
-    site_info = {'domains': '欧冠'}
+    site_info = {'domain': '欧冠'}
     rules = (
         Rule(LinkExtractor(allow=P_S_C['page_allow_tuple'],
                            restrict_xpaths=P_S_C['page_restrict_xpaths'],
