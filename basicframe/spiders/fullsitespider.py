@@ -44,6 +44,7 @@ class FullSiteSpider(RedisCrawlSpider):
                     '.*doc', '.*docx', "javascript",
                     "/image", "/img", "/pic", 'video'
                 ],
+                canonicalize=True
             ),
             follow=True,
             callback='parse_item',
