@@ -28,11 +28,12 @@ class FullSiteSpider(RedisCrawlSpider):
         # 是否禁用重定向
         'REQUESTS_FOLLOW_REDIRECTS': False,
 
-        # # 全站使用布隆过滤器
-        # 'DUPEFILTER_CLASS': "scrapy_redis_bloomfilter.dupefilter.RFPDupeFilter",
-        # 'SCHEDULER': "scrapy_redis_bloomfilter.scheduler.Scheduler",
-        # 'BLOOMFILTER_HASH_NUMBER': 6,
-        # 'BLOOMFILTER_BIT': 32,
+        # 全站使用布隆过滤器
+        'SCHEDULER': "scrapy_redis_bloomfilter.scheduler.Scheduler",
+        'DUPEFILTER_CLASS': "scrapy_redis_bloomfilter.dupefilter.RFPDupeFilter",
+        'BLOOMFILTER_HASH_NUMBER': 6,
+        'BLOOMFILTER_BIT': 30,
+        'SCHEDULER_PERSIST': True
     }
     rules = (
         Rule(
