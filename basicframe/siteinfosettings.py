@@ -10,7 +10,10 @@ Site type 1 部分静态
 
 Partial_Static_Crawling = {
     'page_allow_tuple': (r'page=', r'&page', r'page/\d+', r'index\.\d+', r'/\d+/$', r'[\?&]page=\d+'),
-    'page_restrict_xpaths': '//*[not(self::header or ancestor::header)]',
+    'page_restrict_xpaths': ('//*[not(self::header or ancestor::header)]',
+                             '//*[not(self::footer or ancestor::footer)]',
+                             '//*[not(@id="header")]',
+                             '//*[not(@id="footer")]'),
     'deny': ('#', 'view_type=')
 }
 

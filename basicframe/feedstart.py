@@ -85,6 +85,7 @@ def crawl_redis_url():
 
 
 if __name__ == '__main__':
-    crawl_redis_url()
+    crawl_specific_url('https://terms.naver.com/list.naver?cid=43702&categoryId=43702&so=st3.asc&viewType=&categoryType=&index=%E3%85%8D')
+    # crawl_redis_url()
     # url = 'https://en.as.com/news/champions-league/'
     # crawl_specific_url(url)
