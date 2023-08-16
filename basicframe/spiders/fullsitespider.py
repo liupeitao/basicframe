@@ -16,9 +16,9 @@ class FullSiteSpider(RedisCrawlSpider):
     custom_settings = {
         'RETRY_ENABLED': False,
         # 爬虫空闲时从 redis 取数据频率
-        'SCHEDULER_IDLE_BEFORE_CLOSE': 1300,
+        # 'SCHEDULER_IDLE_BEFORE_CLOSE': 1300,
         # 一次从 redis 中拿取最大量
-        'CONCURRENT_REQUESTS': 64,
+        'CONCURRENT_REQUESTS': 32,
         # 一个域名下最大的并发数（测试-历史数据）
         'CONCURRENT_REQUESTS_PER_DOMAIN': 64,
 
@@ -29,11 +29,11 @@ class FullSiteSpider(RedisCrawlSpider):
         'REQUESTS_FOLLOW_REDIRECTS': False,
 
         # 全站使用布隆过滤器
-        'SCHEDULER': "scrapy_redis_bloomfilter.scheduler.Scheduler",
-        'DUPEFILTER_CLASS': "scrapy_redis_bloomfilter.dupefilter.RFPDupeFilter",
-        'BLOOMFILTER_HASH_NUMBER': 6,
-        'BLOOMFILTER_BIT': 30,
-        'SCHEDULER_PERSIST': True
+        # 'SCHEDULER': "scrapy_redis_bloomfilter.scheduler.Scheduler",
+        # 'DUPEFILTER_CLASS': "scrapy_redis_bloomfilter.dupefilter.RFPDupeFilter",
+        # 'BLOOMFILTER_HASH_NUMBER': 6,
+        # 'BLOOMFILTER_BIT': 30,
+        # 'SCHEDULER_PERSIST': True
     }
     rules = (
         Rule(
@@ -48,12 +48,13 @@ class FullSiteSpider(RedisCrawlSpider):
             ),
             follow=True,
             callback='parse_item',
-            # process_request='process_request_callback',
+            process_request='process_request_callback',
             process_links='process_links_callback',
         ),
     )
 
     def process_request_callback(self, request: scrapy.Request, response):
+        self.spider_logger.info(f'{request.url}')
         return request
 
     def process_links_callback(self, links):
