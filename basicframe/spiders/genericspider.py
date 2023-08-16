@@ -16,12 +16,12 @@ class GenericSpider(CrawlSpider):
     rules = (
         Rule(LinkExtractor(allow=P_S_C['page_allow_tuple'],
                            restrict_xpaths=P_S_C['page_restrict_xpaths'],
-                           deny=P_S_C['deny']),
+                           deny=P_S_C['deny'], canonicalize=True),
              follow=True,
              process_links='process_page_links',
              process_request='process_page_request'),
 
-        Rule(LinkExtractor(),
+        Rule(LinkExtractor(canonicalize=True),
              callback='parse_item',
              follow=False,
              process_links='custom_process_links'),
