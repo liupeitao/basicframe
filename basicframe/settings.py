@@ -2,7 +2,7 @@ import os
 
 BOT_NAME = "basicframe"
 RETRY_ENABLED = True
-RETRY_TIMES: 3
+RETRY_TIMES: 1
 
 SPIDER_MODULES = ["basicframe.spiders"]
 NEWSPIDER_MODULE = "basicframe.spiders"

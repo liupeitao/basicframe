@@ -7,14 +7,13 @@ from scrapy.utils.project import get_project_settings
 from basicframe.midwares.redisclient import RedisClient
 from basicframe.siteinfosettings import contains_substring, Partial_Static_Crawling as P_S_C
 from basicframe.spiders.genericspider import GenericSpider
-from basicframe.test.logHandler import LogHandler
-from basicframe.utils.get_url import get_urls_from_page
-from basicframe.utils.util import generate_std_name
+from basicframe.utils.logHandler import LogHandler
+from basicframe.utils.peekurl import get_urls_from_page
+from basicframe.utils.util import generate_std_name, current_date_time
+
 
 def generate_name(str):
-    now = datetime.now()
-    time_str = now.strftime("%Y_%m_%d_%H:%M")
-    return f"{time_str}_{generate_std_name(str)}"
+    return f"{current_date_time()}_{generate_std_name(str)}"
 
 def send_start_to_redis():
     redis_client = RedisClient().connect()

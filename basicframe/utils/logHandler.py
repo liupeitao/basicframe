@@ -12,7 +12,7 @@
                    2020/07/13: Windows下TimedRotatingFileHandler线程不安全, 不再使用
 -------------------------------------------------
 """
-__author__ = 'pkting'
+__author__ = 'ptking'
 
 import os
 import logging
@@ -47,11 +47,10 @@ class LogHandler(logging.Logger):
     """
     LogHandler
     """
-
     def __init__(self, name, level=DEBUG, stream=True, file=True):
-        self.name = name
         self.level = level
-        logging.Logger.__init__(self, self.name, level=level)
+        self.name = name
+        logging.Logger.__init__(self, name=self.name, level=level)
         if stream:
             self.__setStreamHandler__()
         if file:

@@ -2,7 +2,7 @@ import json
 from difflib import SequenceMatcher
 
 from basicframe.midwares.redisclient import RedisClient
-from basicframe.utils.get_url import get_urls_from_page
+from basicframe.utils.peekurl import get_urls_from_page
 
 
 def likely_url_groups(url_list, threshold) -> dict:

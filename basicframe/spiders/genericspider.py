@@ -1,14 +1,9 @@
-import urllib.parse
-from datetime import datetime
-
 import scrapy
 from scrapy.http import HtmlResponse
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders.crawl import Rule, CrawlSpider
 
 from basicframe.spiders.extractors.articelextractor import extractor_articel
-from basicframe.test.logHandler import LogHandler
-from basicframe.utils.util import generate_std_name
 
 recent_urls_set = set()
 from basicframe.siteinfosettings import Partial_Static_Crawling as P_S_C
@@ -19,10 +14,17 @@ class GenericSpider(CrawlSpider):
 
     site_info = {'domains': '欧冠'}
     rules = (
-        Rule(LinkExtractor(allow=P_S_C['page_allow_tuple'], restrict_xpaths=P_S_C['page_restrict_xpaths']),
-             follow=True, process_links='process_page_links', process_request='process_page_request'),
+        Rule(LinkExtractor(allow=P_S_C['page_allow_tuple'],
+                           restrict_xpaths=P_S_C['page_restrict_xpaths'],
+                           deny=P_S_C['deny']),
+             follow=True,
+             process_links='process_page_links',
+             process_request='process_page_request'),
+
         Rule(LinkExtractor(),
-             callback='parse_item', follow=False, process_links='custom_process_links'),
+             callback='parse_item',
+             follow=False,
+             process_links='custom_process_links'),
     )
 
     def process_page_links(self, links):
@@ -34,8 +36,9 @@ class GenericSpider(CrawlSpider):
         yield scrapy.Request(self.name)
 
     def process_page_request(self, request: scrapy.Request, response):
-        # request.priority = 2  # 越大月高
         self.spider_logger.info(f"processing page: {request.url}")
+        request.meta['page_type'] = 'PAGE_TYPE'
+        request.meta['max_retry_times'] = 3
         return request
 
     def custom_process_links(self, links):

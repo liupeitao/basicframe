@@ -9,7 +9,7 @@ from basicframe.midwares.celeryclient import app
 from basicframe.midwares.mongodbclient import MongoDBClient
 from basicframe.spiders.extractors.articelextractor import extractor_articel_gen
 mongo = MongoDBClient().connect()['article']['0815生成_待提交_politico']
-from basicframe.utils.util import proxy_info
+from basicframe.utils.util import proxies
 @app.task(queue='news_processing_queue')
 def news_processing_article(news_info):
     site_info = {

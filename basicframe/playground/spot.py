@@ -3,8 +3,8 @@ import re
 import requests
 from gerapy_auto_extractor import is_list, probability_of_detail, probability_of_list, is_detail
 
-from basicframe.test.logHandler import LogHandler
-from basicframe.utils.get_url import get_urls_from_page
+from basicframe.utils.logHandler import LogHandler
+from basicframe.utils.peekurl import get_urls_from_page
 
 proxies = {
     'http': 'http://localhost:7890',

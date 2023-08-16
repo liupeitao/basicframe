@@ -1,5 +1,5 @@
 import subprocess
-from basicframe.test.logHandler import LogHandler
+from basicframe.utils.logHandler import LogHandler
 
 
 def get_urls_from_page(page_url):

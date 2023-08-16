@@ -113,3 +113,6 @@ class ProxyMiddleware(object):
         request.meta["proxy"] = proxy
         print(request.headers['User-Agent'])
         print(f"TestProxyMiddleware --> {proxy}")
+
+    def process_response(self, request, response, spider):
+        return response

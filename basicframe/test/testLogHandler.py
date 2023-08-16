@@ -12,7 +12,7 @@
 """
 __author__ = 'J_hao'
 
-from basicframe.test.logHandler import LogHandler
+from basicframe.utils.logHandler import LogHandler
 
 def testLogHandler():
     log = LogHandler('test', file=True)
