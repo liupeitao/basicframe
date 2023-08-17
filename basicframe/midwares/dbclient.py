@@ -18,13 +18,15 @@ import os
 import sys
 from urllib.parse import urlparse
 
-from basicframe.utils.singleton import singleton
+from basicframe.utils.singleton import Singleton
+from basicframe.utils.util import withMetaclass
+
+
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
-@singleton
-class DbClient():
+class DbClient(withMetaclass(Singleton)):
     """
     DbClient DB工厂类 提供get/put/update/pop/delete/exists/getAll/clean/getCount/changeTable方法
 
@@ -54,11 +56,11 @@ class DbClient():
         init
         :return:
         """
-        self.parseDbConn(db_conn)
-        self.__initDbClient()
+        self.parse_db_conn(db_conn)
+        self.__init_db_client()
 
     @classmethod
-    def parseDbConn(cls, db_conn):
+    def parse_db_conn(cls, db_conn):
         db_conf = urlparse(db_conn)
         cls.db_type = db_conf.scheme.upper().strip()
         cls.db_host = db_conf.hostname
@@ -68,7 +70,7 @@ class DbClient():
         cls.db_name = db_conf.path[1:]
         return cls
 
-    def __initDbClient(self):
+    def __init_db_client(self):
         """
         init DB Client
         :return:
@@ -78,6 +80,8 @@ class DbClient():
             __type = "ssdbClient"
         elif "REDIS" == self.db_type:
             __type = "redisClient"
+        elif "MONGODB" == self.db_type:
+            __type = "MongoDbClient1"
         else:
             pass
         assert __type, 'type error, Not support DB type: {}'.format(self.db_type)
@@ -87,11 +91,11 @@ class DbClient():
                                                                                      password=self.db_pwd,
                                                                                      db=self.db_name)
 
-    def get(self, https, **kwargs):
-        return self.client.get(https, **kwargs)
+    def get(self):
+        return self.client.get()
 
     def put(self, key, **kwargs):
-        return self.client.put(key, **kwargs)
+        return self.client.  put(key, **kwargs)
 
     def update(self, key, value, **kwargs):
         return self.client.update(key, value, **kwargs)
@@ -102,20 +106,20 @@ class DbClient():
     def exists(self, key, **kwargs):
         return self.client.exists(key, **kwargs)
 
-    def pop(self, https, **kwargs):
-        return self.client.pop(https, **kwargs)
+    def pop(self, **kwargs):
+        return self.client.pop(**kwargs)
 
-    def getAll(self, https):
-        return self.client.getAll(https)
+    def get_all(self):
+        return self.client.get_all()
 
     def clear(self):
         return self.client.clear()
 
-    def changeTable(self, name):
-        self.client.changeTable(name)
+    def change_table(self, name):
+        self.client.change_table(name)
 
-    def getCount(self):
-        return self.client.getCount()
+    def get_count(self):
+        return self.client.get_count()
 
     def test(self):
         return self.client.test()

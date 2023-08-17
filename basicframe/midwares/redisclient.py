@@ -38,12 +38,4 @@ class RedisClient:
         return dict(json.loads(domain_info_dict.decode()))
 
 
-import pandas as pd
 
-
-
-
-
-if __name__ == '__main__':
-    pass
-    # redis_conn RedisClient().connect()
