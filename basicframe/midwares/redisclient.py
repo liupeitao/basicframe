@@ -21,10 +21,11 @@ from random import choice
 from redis import Redis
 import json
 
+from basicframe.midwares.dbclient import DbClient
 from basicframe.utils.logHandler import LogHandler
 
 
-class RedisClient(object):
+class RedisClient(DbClient):
     """
     Redis client
 
@@ -105,14 +106,14 @@ class RedisClient(object):
         """
         return self.__conn.hset(self.name, site_info['start_url'], site_info.to_json)
 
-    def get_all(self):
+    def get_all(self, **kwargs):
         """
         字典形式返回所有网站信息, 使用changeTable指定hash name
         :return:
         """
         # items = self.__conn.hvals(self.name)
-        keys = self.__conn.keys()
-        return keys
+        items = self.__conn.hvals(self.name)
+        return items
 
     def clear(self):
         """
@@ -150,4 +151,7 @@ class RedisClient(object):
         except ResponseError as e:
             log.error('redis connection error: %s' % str(e), exc_info=True)
             return e
+
+    def get_all_keyword(self):
+        return self.__conn.hkeys(self.name)
 

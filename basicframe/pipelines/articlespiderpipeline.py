@@ -3,18 +3,17 @@ from datetime import datetime
 
 from scrapy.utils.project import get_project_settings
 
-from basicframe.midwares.mongodbclient import MongoDBClient
+from basicframe.midwares.dbclient import DbClient
 
-mongo_client = MongoDBClient().connect()
 
 
 class ArticleSpiderPipeline:
     settings = get_project_settings()
 
     def open_spider(self, spider: scrapy.Spider):
-        self.db = mongo_client[spider.settings['MONGO_DB']]
+        self.db = DbClient([spider.settings['MONGO_DB']])
         coll_name = self.generate_name(spider.name)
-        self.collection = self.db[coll_name]
+        self.collection = self.db.change_table(coll_name)
 
     def process_item(self, item: scrapy.Item, spider: scrapy.Spider):
         if len(item['content']) > 100:

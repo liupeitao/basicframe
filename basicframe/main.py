@@ -57,15 +57,15 @@ def crawl_specific_url(url):
     url = process_url(url)
     start_scrapy(url)
 
-
-def crawl_redis_url():
-    redis_client.change_table('欧冠')
-    site = redis_client.get()
-    site = json.loads(site.decode())
-    url = site['start_url']
-    logger = LogHandler(name='start_scrapy', file=True)
-    logger.info(f'start_scrapy ... {url}')
-    crawl_specific_url(url)
+#
+# def crawl_redis_url():
+#     redis_client.change_table('欧冠')
+#     site = redis_client.get()
+#     site = json.loads(site)
+#     url = site['start_url']
+#     logger = LogHandler(name='start_scrapy', file=True)
+#     logger.info(f'start_scrapy ... {url}')
+#     crawl_specific_url(url)
 
 
 def start_crawl_site(spider_cls, start_url):
@@ -83,6 +83,8 @@ def start_crawl_site(spider_cls, start_url):
 
 if __name__ == '__main__':
     spider_type = [FullSiteSpider, GenericSpider]
-    crawl_redis_url()
-    # crawl_specific_url('https://www.sportskeeda.com/go/serie-a-calcio/news')
+    # crawl_redis_url()
+    # crawl_specific_url('http://www.naewoeilbo.com/news/articleList.html?sc_section_code=S1N4&view_type=sm')
     # crawl_specific_url('https://www.dailymail.co.uk/sport/copa_america/index.html')
+
+    start_crawl_site(GenericSpider, 'http://www.naewoeilbo.com/news/articleList.html?sc_section_code=S1N4&view_type=sm')

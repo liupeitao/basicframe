@@ -32,7 +32,6 @@ class GenericSpider(CrawlSpider):
         return processed_urls
 
     def start_requests(self):
-
         yield scrapy.Request(self.name)
 
     def process_page_request(self, request: scrapy.Request, response):

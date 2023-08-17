@@ -45,5 +45,5 @@ def is_full():
 
 if __name__ == '__main__':
     # send_start_to_redis_from_mongo()
-    is_full()
-
+    # is_full()
+    pass

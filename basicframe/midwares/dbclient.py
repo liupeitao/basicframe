@@ -85,8 +85,7 @@ class DbClient():
         else:
             pass
         assert __type, 'type error, Not support DB type: {}'.format(self.db_type)
-        s = getattr(__import__(__type.lower()), "%sClient" % self.db_type.title())
-        self.client = getattr(__import__(__type), "%sClient" % self.db_type.title())(host=self.db_host,
+        self.client = getattr(__import__(__type.lower()), "%sClient" % self.db_type.title())(host=self.db_host,
                                                                                      port=self.db_port,
                                                                                      username=self.db_user,
                                                                                      password=self.db_pwd,
@@ -110,8 +109,8 @@ class DbClient():
     def pop(self, **kwargs):
         return self.client.pop(**kwargs)
 
-    def get_all(self):
-        return self.client.get_all()
+    def get_all(self, **kwargs):
+        return self.client.get_all(**kwargs)
 
     def clear(self):
         return self.client.clear()
@@ -124,3 +123,6 @@ class DbClient():
 
     def test(self):
         return self.client.test()
+
+    def get_all_keyword(self):
+        return self.client.get_all_keyword()
