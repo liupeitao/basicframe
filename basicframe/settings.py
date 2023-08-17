@@ -83,6 +83,7 @@ LOG_LEVEL = 'INFO'
 REDIRECT_ENABLED = False
 DOWNLOAD_TIMEOUT = 60
 
+MAX_IDLE_TIME_BEFORE_CLOSE = 20
 #
 # DEPTH_PRIORITY = 1
 # SCHEDULER_DISK_QUEUE = 'scrapy.squeues.PickleFifoDiskQueue'
@@ -100,7 +101,8 @@ DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 
 # 解析yaml文件配置
 import yaml
-REDIRECT_ENABLED = True
+
+
 
 # 获取当前文件的目录路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
