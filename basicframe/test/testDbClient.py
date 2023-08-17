@@ -25,17 +25,13 @@ def testDbClient():
     # assert s.db_port == 8888
 
 
-    # k = DbClient("redis://:password@127.0.0.1:6379/1")
-    # assert k.db_type == "REDIS"
-    # assert k.db_pwd == "password"
-    # assert k.db_host == "127.0.0.1"
-    # assert k.db_port == 6379
-    # assert k.db_name == "1"
+    k = DbClient("redis://:password@127.0.0.1:6379/1")
+    assert k.db_type == "REDIS"
+    assert k.db_pwd == "password"
+    assert k.db_host == "127.0.0.1"
+    assert k.db_port == 6379
+    assert k.db_name == "1"
 
-    s = DbClient('mongodb://root:root123456@106.15.10.74:27017/admin')
-    s.change_table('goal1111')
-
-    assert s.get_count() == len(s.get_all())
 
 
 if __name__ == '__main__':

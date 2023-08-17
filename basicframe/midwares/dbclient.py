@@ -26,7 +26,7 @@ from basicframe.utils.util import withMetaclass
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
-class DbClient(withMetaclass(Singleton)):
+class DbClient():
     """
     DbClient DB工厂类 提供get/put/update/pop/delete/exists/getAll/clean/getCount/changeTable方法
 
@@ -46,7 +46,7 @@ class DbClient(withMetaclass(Singleton)):
 
         所有方法需要相应类去具体实现：
             ssdb: ssdbClient.py
-            redis: redisClient.py
+            redis: redisclient.py
             mongodb: mongodbClient.py
 
     """
@@ -79,12 +79,13 @@ class DbClient(withMetaclass(Singleton)):
         if "SSDB" == self.db_type:
             __type = "ssdbClient"
         elif "REDIS" == self.db_type:
-            __type = "redisClient"
+            __type = "RedisClient"
         elif "MONGODB" == self.db_type:
             __type = "MongoDbClient1"
         else:
             pass
         assert __type, 'type error, Not support DB type: {}'.format(self.db_type)
+        s = getattr(__import__(__type.lower()), "%sClient" % self.db_type.title())
         self.client = getattr(__import__(__type), "%sClient" % self.db_type.title())(host=self.db_host,
                                                                                      port=self.db_port,
                                                                                      username=self.db_user,

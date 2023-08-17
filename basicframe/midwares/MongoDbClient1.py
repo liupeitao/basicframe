@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 -----------------------------------------------------
-   File Name：     redisClient.py
+   File Name：     redisclient.py
    Description :   封装Redis相关操作
    Author :        JHao
    date：          2019/8/9
@@ -103,8 +103,8 @@ class MongodbClient(object):
         字典形式返回所有网站信息, 使用changeTable指定hash name
         :return:
         """
-        documents = list(self.get_collection_cursor())
-        return documents
+        return self.get_collection_cursor()
+
 
     def get_collection_cursor(self):
         cursor = self.__conn[self.db][self.coll].find()

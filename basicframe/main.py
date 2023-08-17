@@ -1,13 +1,18 @@
+import json
 import urllib
+from urllib.parse import urlparse
 
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-from basicframe.midwares.redisclient import RedisClient
+from basicframe.midwares.dbclient import DbClient
+from basicframe.settings import REDIS_URL
 from basicframe.spiders.fullsitespider import FullSiteSpider
 from basicframe.spiders.genericspider import GenericSpider
 from basicframe.utils.logHandler import LogHandler
-from basicframe.utils.util import current_date_time, generate_std_name
+from basicframe.utils.util import generate_std_name
+
+redis_client = DbClient(REDIS_URL)
 
 
 def generate_name(str):
@@ -54,26 +59,26 @@ def crawl_specific_url(url):
 
 
 def crawl_redis_url():
-    redis_client = RedisClient().connect()
-    url = redis_client.lpop('欧冠').decode()
+    redis_client.change_table('欧冠')
+    site = redis_client.get()
+    site = json.loads(site.decode())
+    url = site['start_url']
     logger = LogHandler(name='start_scrapy', file=True)
     logger.info(f'start_scrapy ... {url}')
     crawl_specific_url(url)
 
 
-def start_crawl_site(spider_type, start_url):
+def start_crawl_site(spider_cls, start_url):
     process = CrawlerProcess(get_project_settings())
     # 将爬虫添加到CrawlerProcess中
     args = {
         'name': start_url,
-        'allowed_domains': [f'{urllib.parse.urlparse(start_url).netloc}'],
+        'allowed_domains': [f'{urlparse(start_url).netloc}'],
         'spider_logger': LogHandler(name=f'crawling/{generate_name(start_url)}', file=True)
     }
-    process.crawl(spider_type, **args)
+    process.crawl(spider_cls, **args)
     # 启动爬虫
     process.start()
-
-
 
 
 if __name__ == '__main__':
