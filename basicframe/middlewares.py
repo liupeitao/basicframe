@@ -2,6 +2,9 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import random
+
+import requests
 from fake_useragent import UserAgent
 from scrapy import signals
 
@@ -104,12 +107,28 @@ class BasicframeDownloaderMiddleware:
 
 
 class ProxyMiddleware(object):
+    def __init__(self):
+        self.counter = 0
+        self.proxys = None
+
+    def update_proxy_pool(self):
+        ip_port_list = requests.get("https://servers.qunyindata.com/GetWDProxy?count=30").json()["results"]
+        self.proxys = [f'http://{ip_port}' for ip_port in ip_port_list]
+
     def process_request(self, request, spider):
+        # if self.counter % 100 == 0:
+        #     self.update_proxy_pool()
         proxy = "http://127.0.0.1:7890"
         headers = {
             "User-Agent": UserAgent().random
         }
         request.headers.update(headers)
         request.meta["proxy"] = proxy
+        # request.meta['proxy'] = random.choice(self.proxys)
+
         print(request.headers['User-Agent'])
         print(f"TestProxyMiddleware --> {proxy}")
+        self.counter += 1
+
+    def process_response(self, request, response, spider):
+        return response

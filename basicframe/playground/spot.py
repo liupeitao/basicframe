@@ -1,21 +1,17 @@
-import os
-import pprint
-import json
 import re
-import urllib.parse
-
-from gerapy_auto_extractor import is_detail, is_list, probability_of_detail, probability_of_list
 
 import requests
+from gerapy_auto_extractor import is_list, probability_of_detail, probability_of_list, is_detail
 
-from basicframe.utils.diff import likely_url_groups
-from basicframe.utils.get_url import get_url_list
+from basicframe.utils.logHandler import LogHandler
+from basicframe.utils.peekurl import get_urls_from_page
 
 proxies = {
     'http': 'http://localhost:7890',
     'https': 'http://localhost:7890'
 }
 def judge_list(url):
+    log = LogHandler('urljudge', file=True)
     html = requests.get(url, proxies=proxies).text
     try:
         print(probability_of_detail(html), probability_of_list(html))
@@ -24,6 +20,7 @@ def judge_list(url):
         else:
             return 'detail'
     except Exception as e:
+        log.warning(f'{url} Exception: {e} judge error')
         return None
 
 def judge_list_by_html(html):
@@ -32,6 +29,13 @@ def judge_list_by_html(html):
     else:
         return 0
 
+def judge_detail_by_html(html):
+    if is_detail(html):
+        return probability_of_detail(html)
+    else:
+        return 0
+
+##  返回可能是 列表页和详情页
 def process(url_meta):
     if not url_meta:
         return
@@ -79,7 +83,7 @@ if __name__ == '__main__':
         print("process url:", key)
         f.write("process url:" + str(key))
         key = key.decode()
-        url_list = get_url_list(key)
+        url_list = get_urls_from_page(key)
         for url in url_list:
             if 'page' in url:
                 now += 1

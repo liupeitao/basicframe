@@ -1,29 +1,19 @@
-# Scrapy settings for basicframe project
-#
-# For simplicity, this file contains only settings considered important or
-# commonly used. You can find more settings consulting the documentation:
-#
-#     https://docs.scrapy.org/en/latest/topics/settings.html
-#     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 import os
 
 BOT_NAME = "basicframe"
 RETRY_ENABLED = True
-RETRY_TIMES: 3
-# BOT_NAME = "articlex_spider"
+RETRY_TIMES: 1
 
 SPIDER_MODULES = ["basicframe.spiders"]
 NEWSPIDER_MODULE = "basicframe.spiders"
 
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = "basicframe (+http://www.yourdomain.com)"
+
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 16
+CONCURRENT_REQUESTS = 32
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
@@ -36,13 +26,9 @@ CONCURRENT_REQUESTS_PER_IP = 100
 COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
-# TELNETCONSOLE_ENABLED = False
+TELNETCONSOLE_ENABLED = False
 
-# Override the default request headers:
-# DEFAULT_REQUEST_HEADERS = {
-#    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-#    "Accept-Language": "en",
-# }
+
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
@@ -97,6 +83,7 @@ LOG_LEVEL = 'INFO'
 REDIRECT_ENABLED = False
 DOWNLOAD_TIMEOUT = 60
 
+MAX_IDLE_TIME_BEFORE_CLOSE = 20
 #
 # DEPTH_PRIORITY = 1
 # SCHEDULER_DISK_QUEUE = 'scrapy.squeues.PickleFifoDiskQueue'
@@ -114,6 +101,8 @@ DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 
 # 解析yaml文件配置
 import yaml
+
+
 
 # 获取当前文件的目录路径
 current_dir = os.path.dirname(os.path.abspath(__file__))

@@ -1,3 +1,21 @@
+def contains_substring(text, substr_tuple):
+    for substr in substr_tuple:
+        if substr in text:
+            return True
+    return False
+
+"""
+Site type 1 部分静态
+"""
+
+Partial_Static_Crawling = {
+    'page_allow_tuple': (r'page=', r'&page', r'page/\d+', r'index\.\d+', r'/\d+/$', r'[\?&]page=\d+'),
+    'page_restrict_xpaths': '//*[not(self::header or ancestor::header)]',
+    'deny': ('view_type=',)
+}
+
+
+
 SITE_INFO_TABLE = {
     'https://www.thedrive.com/the-war-zone': {
         'domains': '政治',
@@ -24,7 +42,7 @@ SITE_INFO_TABLE = {
         'selector': {
             'type': 'Partial | Static',
             'item_allow': [r'news', 'article', 'item'],
-            'page_allow': ['page', r'/(\d+)/', 'next', 'late', 'before'],
+            'page_allow': ['page', r'/(\d+)/', 'next', 'late', 'before', r'index.\d+'],
             # 'item_xpath_restrict': ['//article', 'content', '//table'],
             # 'page_xpath_restrict': "//*[contains(text(), 'page') or contains(text(), 'next')]"
         }
