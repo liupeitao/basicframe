@@ -1,6 +1,6 @@
 # Redis配置
 redis:
-  url: redis://:qunyin@123@101.35.228.6:6379/2
+  url: redis://:qunyin@123@101.35.228.6:6379/3
 
 # MySQL配置
 mysql:

@@ -1,0 +1,47 @@
+- hosts: all
+  become: yes
+  tasks:
+
+  - name: Install necessary system packages
+    yum:
+      name:
+        - python3
+        - python3-pip
+        - git
+      state: present
+
+  - name: Ensure ~/.virtualenvs directory exists
+    file:
+      path: ~/.virtualenvs
+      state: directory
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"
+      mode: '0755'
+
+  - name: Install virtualenv using pip
+    pip:
+      name: virtualenv
+      executable: pip3
+      extra_args: '--trusted-host pypi.tuna.tsinghua.edu.cn'
+  
+  - name: Create a virtual environment for the project
+    command:
+      cmd: "python3 -m virtualenv ~/.virtualenvs/basicframe"
+      creates: "~/.virtualenvs/basicframe"
+
+  - name: Clone the project repository
+    git:
+      repo: 'https://gitee.com/liupeitao/basicframe.git'
+      dest: '~/projects/basicframe'
+      clone: yes
+      update: yes
+
+  - name: Install Python libraries in the virtual environment using requirements.txt
+    pip:
+      requirements: ~/projects/basicframe/requirements.txt
+      state: present
+      virtualenv: ~/.virtualenvs/basicframe
+      extra_args: '--trusted-host pypi.tuna.tsinghua.edu.cn'
+  # Assuming you have other tasks related to setting up or configuring the project, add them here.
+
+
