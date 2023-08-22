@@ -8,9 +8,9 @@ redis_conn = RedisClient().connect()
 
 
 def run_tasks_from_redis():
-    for i in range(50000):
+    for i in range(5000):
         # This will block until an item is available
-        _, url = redis_conn.brpop('detailurls',10)
+        _, url = redis_conn.brpop('tripage_detail',10)
 
         news_info = {'url': url.decode('utf-8')}
         x = news_processing_article.delay(news_info)

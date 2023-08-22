@@ -1,10 +1,8 @@
 from kombu import Queue, Exchange
-
 from basicframe import settings
 
-
 result_backend = settings.CELERY_RESULT_BACKEND
-broker = settings.CELERY_BROKER_URL
+broker_url = settings.CELERY_BROKER_URL
 
 task_default_queue = 'default'
 task_default_exchange = 'tasks'
