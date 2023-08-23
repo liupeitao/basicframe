@@ -8,6 +8,8 @@ assets/
 
 *.log
 *.txt
+
+!requirements.txt
 # C extensions
 *.so
 

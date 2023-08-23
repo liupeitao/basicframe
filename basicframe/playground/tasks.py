@@ -1,26 +1,48 @@
 import json
+import random
 import time
 
 import requests
-from celery import Celery
-from goose3 import Goose
-from newspaper import Article
+
 from basicframe.midwares.celeryclient import app
 from basicframe.midwares.mongodbclient import MongoDBClient
 from basicframe.spiders.extractors.articelextractor import extractor_articel_gen
-mongo = MongoDBClient().connect()['article']['test']
+mongo = MongoDBClient().connect()['article']['tridetail']
 from basicframe.midwares.redisclient import RedisClient
 redis_conn = RedisClient().connect()
 from basicframe.utils.logHandler import LogHandler
 logger = LogHandler(name='catch_news', file=True)
-@app.task(queue='processurls')
+proxy_list = []
+request_count = 1
+
+def get_proxy_list():
+    global proxy_list
+    try:
+        ip_port_list = requests.get("https://servers.qunyindata.com/GetWDProxy?count=30").json()["results"]
+        proxys = [f'http://{ip_port}' for ip_port in ip_port_list]
+        proxy_list = proxys
+    except Exception as e:
+        print("Failed to fetch proxy list:", str(e))
+
+def get_random_proxy():
+    global request_count
+    if request_count % 100 == 0:
+        request_count = 1
+        get_proxy_list()  # 更新代理池
+    if not proxy_list:
+        get_proxy_list()  # 初始化代理池
+    request_count += 1
+    return random.choice(proxy_list)
+
+@app.task(queue='processurls', ignore_result=True)
 def news_processing_article(news_info):
-    redis_coll = 'tripage_detail'
+    redis_coll = 'detailurls'
     site_info = {
-        'domains': "欧冠"
+        'domains': ''
     }
     try:
-        response = requests.get(news_info['url'], timeout=2)
+        proxy = get_random_proxy()
+        response = requests.get(news_info['url'], proxies={"http": proxy, "https": proxy}, timeout=2)
         response.raise_for_status()  # Raise an exception for HTTP errors
     except (requests.RequestException, Exception) as e:
         logger.info(f"downloading error: {news_info['url']}")

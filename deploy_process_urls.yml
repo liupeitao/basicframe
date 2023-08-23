@@ -29,12 +29,26 @@
       cmd: "python3 -m virtualenv ~/.virtualenvs/basicframe"
       creates: "~/.virtualenvs/basicframe"
 
-  - name: Clone the project repository
-    git:
-      repo: 'https://gitee.com/liupeitao/basicframe.git'
-      dest: '~/projects/basicframe'
-      clone: yes
-      update: yes
+#  - name: Clone the project repository
+#    git:
+#      repo: 'https://gitee.com/liupeitao/basicframe.git'
+#      dest: '~/projects/basicframe'
+#      clone: yes
+#      update: yes
+#      force: true
+
+
+  - name: Synchronize the project directory excluding certain file types
+    synchronize:
+      src: /home/ptking/src/basicframe/
+      dest: ~/projects/basicframe/
+      delete: yes  # optional: to delete files in dest that are not in src
+      rsync_opts:
+        - "--exclude=*.txt"
+        - "--exclude=*.log"
+        - "--exclude=*.xlsx"
+        - "--exclude=*.json"
+
 
   - name: Install Python libraries in the virtual environment using requirements.txt
     pip:

@@ -105,7 +105,6 @@ class BasicframeDownloaderMiddleware:
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
 
-
 class ProxyMiddleware(object):
     def __init__(self):
         self.counter = 0
@@ -132,3 +131,8 @@ class ProxyMiddleware(object):
 
     def process_response(self, request, response, spider):
         return response
+
+def get_proxy_list():
+    ip_port_list = requests.get("https://servers.qunyindata.com/GetWDProxy?count=30").json()["results"]
+    proxys = [f'http://{ip_port}' for ip_port in ip_port_list]
+    return proxys
