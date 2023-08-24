@@ -26,7 +26,7 @@ from basicframe.utils.util import withMetaclass
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
-class DbClient():
+class DbClient(object):
     """
     DbClient DB工厂类 提供get/put/update/pop/delete/exists/getAll/clean/getCount/changeTable方法
 
@@ -81,7 +81,7 @@ class DbClient():
         elif "REDIS" == self.db_type:
             __type = "RedisClient"
         elif "MONGODB" == self.db_type:
-            __type = "MongoDbClient1"
+            __type = "MongoDbClient"
         else:
             pass
         assert __type, 'type error, Not support DB type: {}'.format(self.db_type)
@@ -95,7 +95,7 @@ class DbClient():
         return self.client.get()
 
     def put(self, key, **kwargs):
-        return self.client.  put(key, **kwargs)
+        return self.client.put(key, **kwargs)
 
     def update(self, key, value, **kwargs):
         return self.client.update(key, value, **kwargs)

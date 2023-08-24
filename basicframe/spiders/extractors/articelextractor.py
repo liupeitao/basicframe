@@ -39,10 +39,9 @@ def extractor_articel_gen(response, site_info: dict) -> dict:
     return item
 
 
-def extractor_articel(response: HtmlResponse, site_info: dict) -> ArticleItem:
+def extractor_articel(response: HtmlResponse) -> ArticleItem:
     item = ArticleItem()
     item['url'] = response.url
-    item.update(site_info)
     item['yield_time'] = math.ceil(time.time())
     for extractor in (newspaper_extractor, gne_extractor, goose_extractor):
         try:

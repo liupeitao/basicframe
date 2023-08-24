@@ -6,35 +6,28 @@ from scrapy.spiders.crawl import Rule, CrawlSpider
 from basicframe.spiders.extractors.articelextractor import extractor_articel
 
 recent_urls_set = set()
-from basicframe.siteinfosettings import Partial_Static_Crawling as P_S_C
+
 
 
 # 适用于部分分页。会有一点误差。
-class GenericSpider(CrawlSpider):
+class PenericSpider(CrawlSpider):
     rules = (
-        Rule(LinkExtractor(allow=P_S_C['page_allow_tuple'],
-                           restrict_xpaths=P_S_C['page_restrict_xpaths'],
-                           deny=P_S_C['deny'], canonicalize=True),
+        Rule(LinkExtractor(allow='nba', canonicalize=True,deny='soccer'),
              follow=True,
-             process_links='process_page_links',
-             process_request='process_page_request'),
-
-        Rule(LinkExtractor(canonicalize=True),
              callback='parse_item',
-             follow=False,
-             process_links='custom_process_links'),
+             process_links='process_page_links',
+    ),
+
     )
 
     def process_page_links(self, links):
-        processed_urls = self.not_recent_processed_links(links)
-        return processed_urls
+        processd_links= self.not_recent_processed_links(links)
+        return processd_links
 
     def start_requests(self):
         yield scrapy.Request(self.name)
 
     def process_page_request(self, request: scrapy.Request, response):
-        self.spider_logger.info(f"processing page: {request.url}")
-        request.meta['max_retry_times'] = 3
         return request
 
     def custom_process_links(self, links):

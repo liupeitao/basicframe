@@ -58,12 +58,14 @@ class FullSiteSpider(RedisCrawlSpider):
         return request
 
     def process_links_callback(self, links):
-        processed_links = self.not_recent_processed_links(links)
-        return processed_links
+        # processed_links = self.not_recent_processed_links(links)
+        return links
 
     def parse_item(self, response: HtmlResponse):
-        site_info = {'domain': '政治'}
-        yield extractor_articel(response, site_info)
+        site_info = {'domain': 'ouguan'}
+        item = extractor_articel(response)
+        item.update(site_info)
+        yield item
 
     @staticmethod
     def not_recent_processed_links(links):

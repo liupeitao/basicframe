@@ -1,92 +1,51 @@
-# 格式化日志消息并记录
-# logging.info(template.format(user=user, action=action))
-
-"""
-    继承Filter 重写do_filter方法， 即可添加一个过滤条件
-    目前LanguageFilter 存在一些性能问题
-"""
-import json
-import urllib.parse
 from urllib.parse import urlparse
 
-import pandas as pd
-from langdetect import detect
+from basicframe.siteinfosettings import Partial_Static_Crawling as P_S_C
+from basicframe.siteinfosettings import contains_substring
+from basicframe.utils.logHandler import LogHandler
+from basicframe.utils.peekurl import get_urls_from_page
 
 
+def judge_psp_type(raw_url):
+    print("process url:", raw_url)
+    goal = 0
+    url_list = get_urls_from_page(raw_url)
+    for url in url_list:
+        if contains_substring(url, P_S_C['page_allow_tuple']):
+            print(url, 'is page type')
+            goal += 1
+        if goal >= 2:
+            logger = LogHandler(name='ps_type', file=True)
+            logger.info(f'ps type {raw_url}')
+            return True
+    return False
 
-def read_xlsx(path):
-    df = pd.read_excel(path)
-    return str(df.iloc[:, 2])
+
+def judge_full_type(raw_url):
+    path = urlparse(raw_url).path
+    if path == '' or path == '/':
+        return True
+    return False
 
 
 class Filter:
-    def do_filter(self, m3u8_url, response, chain):
-        response = m3u8_url
-        return True
-
-class NetFilter(Filter):
-    def __init__(self):
-        self.site_info_dict = None
-        self.excel_file_path = '/home/ptking/多语种-文本-20230615.xlsx'
-    def get_xinyuan_meta(self):
-        if self.site_info_dict:
-            return self.site_info_dict
-        self.site_info_dict = {}
-        excel_file = pd.ExcelFile(self.excel_file_path)
-        sheet_names = excel_file.sheet_names
-        for name in sheet_names:
-            df = pd.read_excel(self.excel_file_path, sheet_name=name).iloc[:, 5]
-            for url in df:
-                if url is not str:
-                    continue
-                parsed_url = urllib.parse.urlparse(url)
-                if parsed_url.path == '/':
-                    url = parsed_url.netloc
-                    self.site_info_dict[url] = {'all': True}
-                else:
-                    url = parsed_url.netloc
-                    self.site_info_dict[url] = {'all': False, 'path': parsed_url.path}
-                self.site_info_dict[url]['domain'] = name
-        return self.site_info_dict
-
-    def do_filter(self, url, response, chain):
-        all_site_info = self.get_xinyuan_meta()
-        domain = urllib.parse.urlparse(url).netloc
-        try:
-            if all_site_info[domain]['all']:
-                return True
-            else:
-                return urllib.parse.urlparse(url).path.startswith(all_site_info[domain]['path']) or all_site_info[domain]['path'] in url or 'politics' in url or 'Politics' in url
-        except KeyError as e :
-            print("key eeorr... except", url)
-class LanguageFilter(Filter):
-    def __init__(self, lang):
-        self.lang = lang
-
-    def do_filter(self, request, response, chain):
-        try:
-            if detect(request['content']) == 'en':
-                return chain.do_filter(request, response)
-            else:
-                logger.error(f"不是英语: {line.strip()}")
-                return False
-        except Exception as e:
-            return False
+    def do_filter(self, request, response, filter_chain):
+        pass
 
 
-class XinYuanFilter(Filter):
-    def __init__(self, xinyuan):
-        self.xinyuan = xinyuan
 
-    def do_filter(self, request, response, chain):
-        parsed_url = urlparse(request['url'])
-        domain = parsed_url.netloc
-        if domain in self.xinyuan:
-            return chain.do_filter(request, response)
-        else:
-            logger.error(f"不是信源里的: {line.strip()}")
-            return False
+class PartialStaticPageSiteFilter(Filter):
+    def do_filter(self, request, response, filter_chain):
+        if judge_psp_type(request):
+            return 'psp_type'  # 00
+        return filter_chain.do_filter(request, response)
 
+
+class FullSiteFilter(Filter):
+    def do_filter(self, request, response, filter_chain):
+        if judge_full_type(request):
+            return 'full_type'  # 10
+        return filter_chain.do_filter(request, response)
 
 class FilterChain:
     def __init__(self):
@@ -94,24 +53,28 @@ class FilterChain:
         self.index = 0
 
     def add_filter(self, filter):
+        if not isinstance(filter, Filter):
+            raise ValueError("Provided object is not a valid Filter")
         self.filters.append(filter)
+        return self  # 返回self允许方法链式调用
 
     def do_filter(self, request, response):
         if self.index == len(self.filters):
-            return True
+            return False    # unknow type  in now
         filter = self.filters[self.index]
         self.index += 1
         return filter.do_filter(request, response, self)
 
-
-def process_line(line, chain: FilterChain):
-    pass
-
-
-def save_line(line, path):
-    with open(path, mode='a') as f:
-        f.write(line)
+    def reset(self):
+        self.index = 0
 
 
+chain = FilterChain().add_filter(FullSiteFilter()).add_filter(PartialStaticPageSiteFilter())
+
+def judge_type(raw_url):
+    res = chain.do_filter(raw_url, None)
+    chain.reset()
+    return res
 if __name__ == '__main__':
-    pass
+    for i in range(10):
+        print(judge_type('https://www.focus.de/immobilien/immobilienboerse/'))

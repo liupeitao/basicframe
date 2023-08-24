@@ -22,12 +22,13 @@ from random import choice
 from redis import Redis
 import json
 
+import basicframe.settings
 from basicframe.midwares.dbclient import DbClient
 from basicframe.settings import MONGO_DB, MONGO_COLL
 from basicframe.utils.logHandler import LogHandler
 
 
-class MongodbClient(DbClient):
+class MongodbClient(object):
     """
     MongoDB client
 
@@ -45,9 +46,9 @@ class MongodbClient(DbClient):
         :param db: db
         :return:
         """
-        self.db = MONGO_DB
-        self.coll = MONGO_COLL
+        self.db = basicframe.settings.MONGO_DB
         kwargs.pop("db")
+        self.coll = basicframe.settings.MONGO_COLL
         self.__conn = MongoClient(**kwargs)
 
     def get(self):
@@ -56,8 +57,7 @@ class MongodbClient(DbClient):
         :return:
         """
         document = self.__conn[self.db][self.coll].aggregate([{'$sample': {'size': 1}}])
-        print(document)
-        return document
+        return list(document)[0]
 
     def put(self, site_info):
         """

@@ -25,14 +25,10 @@ def testDbClient():
     # assert s.db_port == 8888
 
 
-    k = DbClient("redis://:qunyin@123@101.35.228.6:6379/2")
-    assert k.db_type == "REDIS"
-    assert k.db_pwd == "qunyin@123"
-    assert k.db_host == "101.35.228.6"
-    assert k.db_port == 6379
-    assert k.db_name == "2"
-    k.change_table('网站信息')
-    print(k.get_all())
+    k = DbClient("mongodb://root:root123456@106.15.10.74:27017/admin")
+
+    k.change_table('siteinfo')
+    print(k.get())
 
 if __name__ == '__main__':
     testDbClient()

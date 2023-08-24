@@ -23,3 +23,4 @@ class ArticleItem(scrapy.Item):
     ctime = scrapy.Field()
     pubTime = scrapy.Field()
     yield_time = scrapy.Field()
+    sub_domain = scrapy.Field()

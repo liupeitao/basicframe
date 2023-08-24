@@ -1,4 +1,5 @@
 import subprocess
+
 from basicframe.utils.logHandler import LogHandler
 
 
@@ -24,3 +25,5 @@ def get_urls_from_page(page_url):
         res.append(url)
 
     return list(set(res))
+
+

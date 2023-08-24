@@ -25,7 +25,7 @@ from basicframe.midwares.dbclient import DbClient
 from basicframe.utils.logHandler import LogHandler
 
 
-class RedisClient(DbClient):
+class RedisClient(object):
     """
     Redis client
 

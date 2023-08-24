@@ -1,20 +1,34 @@
+import re
+
+
 def contains_substring(text, substr_tuple):
     for substr in substr_tuple:
-        if substr in text:
+        PAGE_PATTERN = re.compile(substr)
+        if PAGE_PATTERN.search(text):
             return True
     return False
 
 """
 Site type 1 部分静态
 """
+# https://www.lavenir.net/regions/bruxelles/page-6/
+# https://www.elespanol.com/elbernabeu/2418/
 
 Partial_Static_Crawling = {
-    'page_allow_tuple': (r'page=', r'&page', r'page/\d+', r'index\.\d+', r'/\d+/$', r'[\?&]page=\d+'),
+    'page_allow_tuple': (r'page=',
+                         r'&page',
+                         r'page/\d+',
+                         r'index\.\d+',
+                         r'/\d+/$',
+                         r'[\?&]page=\d+',
+                         r'elder/\d+',
+                         r'pno=\d+',
+                         r'page-\d+',),
     'page_restrict_xpaths': '//*[not(self::header or ancestor::header)]',
     'deny': ('view_type=',)
 }
 
-
+# {'start_url':'https://www.daily.co.jp/ring/'}
 
 SITE_INFO_TABLE = {
     'https://www.thedrive.com/the-war-zone': {
