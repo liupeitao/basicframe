@@ -18,7 +18,7 @@ request_count = 1
 def get_proxy_list():
     global proxy_list
     try:
-        ip_port_list = requests.get("https://servers.qunyindata.com/GetWDProxy?count=30").json()["results"]
+        ip_port_list = requests.get("https://servers.qunyindata.com/GetWDProxy?count=50").json()["results"]
         proxys = [f'http://{ip_port}' for ip_port in ip_port_list]
         proxy_list = proxys
     except Exception as e:
@@ -26,7 +26,7 @@ def get_proxy_list():
 
 def get_random_proxy():
     global request_count
-    if request_count % 100 == 0:
+    if request_count % 30 == 0:
         request_count = 1
         get_proxy_list()  # 更新代理池
     if not proxy_list:
@@ -42,7 +42,7 @@ def news_processing_article(news_info):
     }
     try:
         proxy = get_random_proxy()
-        response = requests.get(news_info['url'], proxies={"http": proxy, "https": proxy}, timeout=2)
+        response = requests.get(news_info['url'], proxies={"http": proxy, "https": proxy}, timeout=100)
         response.raise_for_status()  # Raise an exception for HTTP errors
     except (requests.RequestException, Exception) as e:
         logger.info(f"downloading error: {news_info['url']}")

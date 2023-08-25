@@ -2,13 +2,25 @@
   become: yes
   tasks:
 
-  - name: Install necessary system packages
+  - name: Install necessary system packages for CentOS
     yum:
       name:
         - python3
         - python3-pip
         - git
       state: present
+    when: ansible_os_family == 'RedHat'
+
+  - name: Install necessary system packages for Ubuntu
+    apt:
+      name:
+        - python3
+        - python3-pip
+        - git
+        - virtualenv
+      state: present
+    when: ansible_os_family == 'Debian'
+
 
   - name: Ensure ~/.virtualenvs directory exists
     file:
@@ -18,24 +30,16 @@
       group: "{{ ansible_user }}"
       mode: '0755'
 
-  - name: Install virtualenv using pip
-    pip:
-      name: virtualenv
-      executable: pip3
-      extra_args: '--trusted-host pypi.tuna.tsinghua.edu.cn'
-  
+#  - name: Install virtualenv using pip
+#    pip:
+#      name: virtualenv
+#      executable: pip3
+#      extra_args: "--user --trusted-host pypi.tuna.tsinghua.edu.cn"
+
   - name: Create a virtual environment for the project
     command:
       cmd: "python3 -m virtualenv ~/.virtualenvs/basicframe"
       creates: "~/.virtualenvs/basicframe"
-
-#  - name: Clone the project repository
-#    git:
-#      repo: 'https://gitee.com/liupeitao/basicframe.git'
-#      dest: '~/projects/basicframe'
-#      clone: yes
-#      update: yes
-#      force: true
 
 
   - name: Synchronize the project directory excluding certain file types

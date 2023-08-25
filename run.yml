@@ -1,0 +1,11 @@
+- hosts: qunyin169
+  become: yes
+  tasks:
+    - name: Activate virtual environment and execute Python script
+      shell: |
+        bash -c '
+        source /root/.virtualenvs/basicframe/bin/activate
+        export PYTHONPATH=$PATH:/root/projects/basicframe
+        python3 /root/projects/basicframe/basicframe/playground/celery_work.py
+        '
+
