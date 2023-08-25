@@ -1,12 +1,13 @@
+import redis
 from pymongo import MongoClient
 
 from basicframe.filters.filter import judge_type
+
 
 # MongoDB 连接信息
 db_name = 'mulwenben'
 mongo_url = 'mongodb://root:root123456@106.15.10.74:27017/admin'
 coll_name = 'siteinfo'
-
 
 class DocumentProcessor:
     def __init__(self, mongo_url, db_name, coll_name):
@@ -19,15 +20,20 @@ class DocumentProcessor:
     def fetch_one_unprocessed(self):
         """从数据库中获取一个 preprocess 为 false 的文档"""
         if not self.started:
-           self.docs = self.collection.find({"preprocess": True, "type": "00"})
+           self.docs = self.collection.find({"preprocess": False})
            self.started = True
         yield self.docs.next()
 
+    def fetch_one(self, pipeline):
+        doc = self.collection.find_one(pipeline)
+        return doc
 
+    def fetch(self, pipiline):
+        docs_cursor = self.collection.find(pipiline)
+        return docs_cursor
 
     def mark_as_processed(self, start_url, new_document):
         """标记文档为已处理，并替换整个文档"""
-        logger.info(f'tihuan{new_document}')
         self.collection.replace_one({"start_url": start_url}, new_document)
 
     def process_document(self, hook_func):
@@ -39,6 +45,9 @@ class DocumentProcessor:
             self.mark_as_processed(doc["start_url"], processed_doc)
         else:
             print("No unprocessed document found.")
+
+    def update(self, doc):
+        self.mark_as_processed(doc['start_url'], doc)
 
 
 # 定义一个钩子函数

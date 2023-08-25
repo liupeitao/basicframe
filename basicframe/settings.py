@@ -55,7 +55,7 @@ ITEM_PIPELINES = {
     # "basicframe.pipelines.BasicframePipeline": 301,
     "basicframe.pipelines.articlespiderpipeline.ArticleSpiderPipeline": 301
 }
-
+REDIRECT_ENABLED = True
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 # AUTOTHROTTLE_ENABLED = True
@@ -80,7 +80,7 @@ ITEM_PIPELINES = {
 REACTOR_THREADPOOL_MAXSIZE = 20
 LOG_LEVEL = 'INFO'
 
-REDIRECT_ENABLED = False
+
 DOWNLOAD_TIMEOUT = 60
 
 MAX_IDLE_TIME_BEFORE_CLOSE = 20
