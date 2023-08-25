@@ -13,10 +13,17 @@ class DocumentProcessor:
         self.client = MongoClient(mongo_url)
         self.db = self.client[db_name]
         self.collection = self.db[coll_name]
+        self.started = False
+        self.docs = None
 
     def fetch_one_unprocessed(self):
         """从数据库中获取一个 preprocess 为 false 的文档"""
-        return self.collection.find_one({"preprocess": False})
+        if not self.started:
+           self.docs = self.collection.find({"preprocess": True, "type": "00"})
+           self.started = True
+        yield self.docs.next()
+
+
 
     def mark_as_processed(self, start_url, new_document):
         """标记文档为已处理，并替换整个文档"""
@@ -25,9 +32,10 @@ class DocumentProcessor:
 
     def process_document(self, hook_func):
         """处理文档"""
-        doc = self.fetch_one_unprocessed()
+        doc = next(self.fetch_one_unprocessed())
         if doc:
             processed_doc = hook_func(doc)
+            logger.info(f'processed {processed_doc}')
             self.mark_as_processed(doc["start_url"], processed_doc)
         else:
             print("No unprocessed document found.")
@@ -36,9 +44,11 @@ class DocumentProcessor:
 # 定义一个钩子函数
 def custom_processing_hook(document):
     res = judge_type(document['start_url'])
-    logger.info(f'process {document}, judge_type: {res}')
+    logger.info(f'judge_type: {res}, process {document}')
     document['preprocess'] = True
     if not res:
+        document['type'] = 'unknown'
+        document['status'] = 'peding'
         return document
     if res == 'full_type':
         document['type'] = '10'
@@ -53,6 +63,5 @@ from basicframe.utils.logHandler import LogHandler
 logger = LogHandler('process_mongo', file=True)
 processor = DocumentProcessor(mongo_url, db_name, coll_name)
 if __name__ == '__main__':
-
-    for i in range(10):
+    while 1:
         processor.process_document(custom_processing_hook)

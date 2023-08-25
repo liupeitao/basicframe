@@ -12,7 +12,7 @@ mysql:
 
 # MongoDB配置
 mongodb:
-  db: article  # 默认db
+  db: mulwenben  # 默认db
   url: mongodb://root:root123456@106.15.10.74:27017/admin  # "mongodb://qychap:qyno11-d@158.247.243.169:18000/?authSource=admin"
   coll: siteinfo
 

@@ -2,7 +2,7 @@ import re
 from basicframe.siteinfosettings import Partial_Static_Crawling as P_S_C
 page_allow_tuple = P_S_C['page_allow_tuple']
 def test_page_allow_tuple():
-    url1 = 'https://www.daily.co.jp/21662775423/dspc/rec3/ring '
+    url1 = 'https://www.noticiasaominuto.com/casa/2185799/resgate-de-ppr-para-credito-a-habitacao-sem-limite-de-valor-e-subscricao/3243/'
     flag = False
     for index, pattern in enumerate(page_allow_tuple):
         PATTERN = re.compile(pattern)

@@ -51,13 +51,17 @@ class MongodbClient(object):
         self.coll = basicframe.settings.MONGO_COLL
         self.__conn = MongoClient(**kwargs)
 
-    def get(self):
+    def get_random_one(self):
         """
         返回一个url 爬取
         :return:
         """
         document = self.__conn[self.db][self.coll].aggregate([{'$sample': {'size': 1}}])
-        return list(document)[0]
+        return list(document)
+
+    def get(self, **kwargs):
+        documents = self.__conn[self.db][self.coll].aggregate(**kwargs)
+        return list(documents)
 
     def put(self, site_info):
         """
@@ -69,7 +73,7 @@ class MongodbClient(object):
         result = self.__conn[self.db][self.coll].insert_one(site_info)
         return result
 
-    def pop(self):
+    def pop(self, **kwargs):
         """
         随机弹出一个网站信息
         :

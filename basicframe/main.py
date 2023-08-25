@@ -53,8 +53,6 @@ def crawl_specific_url(**kwargs):
     start_scrapy(**kwargs)
 
 
-
-
 def start_crawl_site(spider_cls, **kwargs):
     process = CrawlerProcess(get_project_settings())
     process.crawl(spider_cls, **kwargs)

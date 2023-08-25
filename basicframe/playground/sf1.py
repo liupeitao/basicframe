@@ -19,7 +19,7 @@ class DocumentProcessor:
 
     async def fetch_one_unprocessed(self):
         """从数据库中获取一个 preprocess 为 false 的文档"""
-        return await self.collection.find_one({"preprocess": False})
+        return await self.collection.find_one({"start_url": 'https://mgronline.com/entertainment'})
 
     async def mark_as_processed(self, start_url, new_document):
         """标记文档为已处理，并替换整个文档"""
@@ -31,7 +31,7 @@ class DocumentProcessor:
         doc = await self.fetch_one_unprocessed()
         if doc:
             processed_doc = hook_func(doc)
-            await self.mark_as_processed(doc["start_url"], processed_doc)
+            # await self.mark_as_processed(doc["start_url"], processed_doc)
         else:
             print("No unprocessed document found.")
 
@@ -53,7 +53,6 @@ def custom_processing_hook(document):
 
 if __name__ == '__main__':
     processor = DocumentProcessor(mongo_url, db_name, coll_name)
-
     async def main():
         for _ in range(50000):
             await processor.process_document(custom_processing_hook)

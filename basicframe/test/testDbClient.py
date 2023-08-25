@@ -28,7 +28,13 @@ def testDbClient():
     k = DbClient("mongodb://root:root123456@106.15.10.74:27017/admin")
 
     k.change_table('siteinfo')
-    print(k.get())
+    my_pipeline = [
+        {'$match': {'type': '00'}},
+        {'$sample': {'size': 5}}
+    ]
 
+    result_custom = k.get(pipeline=my_pipeline)
+    print(len(result_custom))
+    print(result_custom)
 if __name__ == '__main__':
     testDbClient()

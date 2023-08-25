@@ -90,9 +90,11 @@ class DbClient(object):
                                                                                      username=self.db_user,
                                                                                      password=self.db_pwd,
                                                                                      db=self.db_name)
+    def get_random_one(self):
+        return self.client.get_random_one()
 
-    def get(self):
-        return self.client.get()
+    def get(self, **kwargs):
+        return self.client.get(**kwargs)
 
     def put(self, key, **kwargs):
         return self.client.put(key, **kwargs)
