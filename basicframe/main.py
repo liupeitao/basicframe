@@ -79,7 +79,7 @@ def start_crawl_site(spider_type, start_url):
 if __name__ == '__main__':
     spider_type = [FullSiteSpider, GenericSpider]
     # crawl_redis_url()
-    start_crawl_site(FullSiteSpider, 'https://spl.sg/')
+    start_crawl_site(FullSiteSpider, 'https://www.skysports.com/nba/news')
     # crawl_specific_url('https://www.sportskeeda.com/go/serie-a-calcio/news')
     # crawl_specific_url('https://www.dailymail.co.uk/sport/copa_america/index.html')
 

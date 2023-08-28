@@ -44,6 +44,7 @@ class FullSiteSpider(RedisCrawlSpider):
                     '.*doc', '.*docx', "javascript",
                     "/image", "/img", "/pic", 'video'
                 ],
+                allow='nba',
                 canonicalize=True
             ),
             follow=True,
@@ -62,7 +63,7 @@ class FullSiteSpider(RedisCrawlSpider):
         return processed_links
 
     def parse_item(self, response: HtmlResponse):
-        site_info = {'domain': '政治'}
+        site_info = {'domain': 'NBA'}
         yield extractor_articel(response, site_info)
 
     @staticmethod

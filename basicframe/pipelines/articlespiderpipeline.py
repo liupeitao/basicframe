@@ -17,7 +17,7 @@ class ArticleSpiderPipeline:
         self.collection = self.db[coll_name]
 
     def process_item(self, item: scrapy.Item, spider: scrapy.Spider):
-        if len(item['content']) > 100:
+        if len(item['content']) > 50:
             item = dict(item)
             print(item)
             self.collection.insert_one(item)
