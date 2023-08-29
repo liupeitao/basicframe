@@ -58,8 +58,8 @@ class FullSiteSpider(RedisCrawlSpider):
         return request
 
     def process_links_callback(self, links):
-        # processed_links = self.not_recent_processed_links(links)
-        return links
+        processed_links = self.not_recent_processed_links(links)
+        return processed_links
 
     def parse_item(self, response: HtmlResponse):
         site_info = {'domain': 'ouguan'}

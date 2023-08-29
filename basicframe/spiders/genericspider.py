@@ -2,6 +2,7 @@ import scrapy
 from scrapy.http import HtmlResponse
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders.crawl import Rule, CrawlSpider
+from scrapy_redis.spiders import RedisCrawlSpider
 
 from basicframe.spiders.extractors.articelextractor import extractor_articel
 
@@ -10,7 +11,7 @@ from basicframe.siteinfosettings import Partial_Static_Crawling as P_S_C
 
 
 # 适用于部分分页。会有一点误差。
-class GenericSpider(CrawlSpider):
+class GenericSpider(RedisCrawlSpider):
     rules = (
         Rule(LinkExtractor(allow=P_S_C['page_allow_tuple'],
                            restrict_xpaths=P_S_C['page_restrict_xpaths'],
@@ -42,14 +43,9 @@ class GenericSpider(CrawlSpider):
         return processed_urls
 
     def parse_item(self, response: HtmlResponse):
-        articel_item = extractor_articel(response)
-        articel_item.update(self.site_info)
-        yield articel_item
-    def parse_page(self, response):
-        pass
-
-    def parse_all(self, response: HtmlResponse):
-        pass
+        article_item = extractor_articel(response)
+        article_item.update(self.site_info)
+        yield article_item
 
     @staticmethod
     def not_recent_processed_links(links):

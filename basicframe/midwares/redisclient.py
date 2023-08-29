@@ -21,7 +21,6 @@ from random import choice
 from redis import Redis
 import json
 
-from basicframe.midwares.dbclient import DbClient
 from basicframe.utils.logHandler import LogHandler
 
 
@@ -137,6 +136,7 @@ class RedisClient(object):
         :return:
         """
         self.name = queue_name
+
 
     def test(self):
         log = LogHandler('redis_client')

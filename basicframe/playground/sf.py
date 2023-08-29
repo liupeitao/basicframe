@@ -1,13 +1,14 @@
 import redis
 from pymongo import MongoClient
-
+from basicframe.settings import MONGO_DB_MUL, MONGO_URL, MONGO_COLL_SITEINFO
 from basicframe.filters.filter import judge_type
 
 
 # MongoDB 连接信息
-db_name = 'mulwenben'
-mongo_url = 'mongodb://root:root123456@106.15.10.74:27017/admin'
-coll_name = 'siteinfo'
+db_name = MONGO_DB_MUL
+mongo_url = MONGO_URL
+coll_name = MONGO_COLL_SITEINFO
+
 
 class DocumentProcessor:
     def __init__(self, mongo_url, db_name, coll_name):
@@ -28,8 +29,8 @@ class DocumentProcessor:
         doc = self.collection.find_one(pipeline)
         return doc
 
-    def fetch(self, pipiline):
-        docs_cursor = self.collection.find(pipiline)
+    def fetch(self, pipeline):
+        docs_cursor = self.collection.find(pipeline)
         return docs_cursor
 
     def mark_as_processed(self, start_url, new_document):

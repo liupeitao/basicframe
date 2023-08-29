@@ -5,18 +5,18 @@ import redis
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-from basicframe.settings import REDIS_URL
+from basicframe.settings import REDIS_URL_MUL
 from basicframe.spiders.fullsitespider import FullSiteSpider
 from basicframe.spiders.genericspider import GenericSpider
 from basicframe.utils.logHandler import LogHandler
 from basicframe.utils.util import generate_std_name
 
-redis_client = redis.from_url(REDIS_URL)
+redis_client = redis.from_url(REDIS_URL_MUL)
 
 from basicframe.playground.sf import processor
-from basicframe.midwares.dbclient import DbClient
 
-mongo_client = DbClient('mongodb://root:root123456@106.15.10.74:27017/admin')
+
+
 
 
 def generate_name(url):
@@ -104,14 +104,14 @@ def restart_a_spider(doc):  # 重新启动中断过的爬虫
     start_crawl_site(**args)
 
 
-def restart_all_spider(start_urls):  # 重新启动所有中断的爬虫
-    for url in start_urls:
-        restart_a_spider(url)
+def restart_all_spider(docs):  # 重新启动所有中断的爬虫
+    for doc in docs:
+        restart_a_spider(doc)
 
 
 def get_all_crawling_spider():
     update_spiders_status()
-    docs = processor.fetch(pipiline={'status': 'crawling'})
+    docs = processor.fetch(pipeline={'status': 'crawling'})
     return list(docs)
 
 
@@ -125,7 +125,7 @@ def update_spiders_status():
         crawling_url_list = crawling_spider_list_from_redis()
         docs = processor.fetch(pipeline={'status': 'crawling'})
         for doc in docs:
-            if doc['start_url'] not in crawling_url_list:
+            if f"{doc['start_url']}:requests" not in crawling_url_list:
                 doc['status'] = 'finish'
                 processor.update(doc)
     except Exception as e:
@@ -140,6 +140,6 @@ def requests_set_length():
 
 
 if __name__ == '__main__':
-    # restart_a_spider('https://famashow.pt/famosos')
-    # restart_all_spider(get_all_crawling_spider())
+    # for i in range(5):
+    # start_new_spider()
     restart_all_spider(get_all_crawling_spider())

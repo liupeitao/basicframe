@@ -123,6 +123,7 @@ config = load_config(config_file)
 # 获取Redis配置
 REDIS_CONFIG = config['redis']
 REDIS_URL = REDIS_CONFIG['url']
+REDIS_URL_MUL = REDIS_CONFIG['url_mul']
 
 # 获取MySQL配置
 MYSQL_CONFIG = config['mysql']
@@ -150,8 +151,9 @@ RABBITMQ_VIRTUAL_HOST = rabbitmq_config['virtual_host']
 mongodb_config = config['mongodb']
 MONGO_URL = mongodb_config['url']
 MONGO_DB = mongodb_config['db']
+MONGO_DB_MUL = mongodb_config['db_mul']
 MONGO_COLL = mongodb_config['coll']
-
+MONGO_COLL_SITEINFO = mongodb_config['coll_siteinfo']
 # logger 配置
 logger_config = config['logger']
 LOGGER_SAVE_DIR = logger_config['saved']
