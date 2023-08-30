@@ -80,6 +80,9 @@ def build_args(doc):
             'domain': domain,
             'sub_domain': sub_domain,
             'lang': lang,
+            'start_url': name,
+            'start_time': current_date_time(),
+            'end_time': 'unknown'
         },
         'type': site_type,
         'name': name,
