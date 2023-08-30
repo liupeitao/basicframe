@@ -19,11 +19,11 @@ Partial_Static_Crawling = {
                          r'&page',
                          r'page/\d+',
                          r'index\.\d+',
-                         r'/\d+/$',
                          r'[\?&]page=\d+',
                          r'elder/\d+',
                          r'pno=\d+',
-                         r'page-\d+',),
+                         r'page-\d+',
+                         r'/\d+/$',),
     'page_restrict_xpaths': '//*[not(self::header or ancestor::header)]',
     'deny': ('view_type=',)
 }

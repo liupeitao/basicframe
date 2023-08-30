@@ -1,3 +1,4 @@
+import multiprocessing
 import urllib
 from urllib.parse import urlparse
 
@@ -9,18 +10,15 @@ from basicframe.settings import REDIS_URL_MUL
 from basicframe.spiders.fullsitespider import FullSiteSpider
 from basicframe.spiders.genericspider import GenericSpider
 from basicframe.utils.logHandler import LogHandler
-from basicframe.utils.util import generate_std_name
+from basicframe.utils.util import generate_std_name, current_date_time
 
 redis_client = redis.from_url(REDIS_URL_MUL)
 
 from basicframe.playground.sf import processor
 
 
-
-
-
 def generate_name(url):
-    return f"{generate_std_name(url)}"
+    return f"{generate_std_name(url)}_{current_date_time()}"
 
 
 def start_scrapy(**kwargs):
@@ -104,9 +102,9 @@ def restart_a_spider(doc):  # 重新启动中断过的爬虫
     start_crawl_site(**args)
 
 
-def restart_all_spider(docs):  # 重新启动所有中断的爬虫
-    for doc in docs:
-        restart_a_spider(doc)
+# def restart_all_spider(docs):  # 重新启动所有中断的爬虫
+#     for doc in docs:
+#         restart_a_spider(doc)
 
 
 def get_all_crawling_spider():
@@ -133,13 +131,42 @@ def update_spiders_status():
         print(f"Error occurred while updating spider status: {e}")
 
 
+def restart_all_spiders(docs):
+    processes = []
+    for doc in docs:
+        process = multiprocessing.Process(target=restart_a_spider, args=(doc,))
+        processes.append(process)
+        process.start()
+
+    for process in processes:
+        process.join()
+
+
 def requests_set_length():
     spider_list = crawling_spider_list_from_redis()
     for spider in spider_list:
         print(spider, redis_client.zcard(spider))
 
 
+def get_finished_spiders():
+    docs = processor.fetch(pipeline={'status': 'finish'})
+    return list(docs)
+
+
+def judge_finish_bugs():
+    spiders = get_finished_spiders()
+    for spider in spiders:
+        dup_key = spider['start_url'] + ':dupefilter'
+        req_key = spider['start_url'] + ':requests'
+        dup_lens = redis_client.scard(dup_key)
+        if 0 < dup_lens < 350 and not redis_client.exists(req_key):
+            # print(spider)
+            spider['status'] = 'bug'
+            processor.update(spider)
+
+
 if __name__ == '__main__':
     # for i in range(5):
     start_new_spider()
-    # restart_all_spider(get_all_crawling_spider())
+    # judge_finish_bugs()
+    # restart_all_spiders(get_all_crawling_spider())

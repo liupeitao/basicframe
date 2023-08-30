@@ -16,6 +16,7 @@ class GenericSpider(RedisCrawlSpider):
         Rule(LinkExtractor(allow=P_S_C['page_allow_tuple'],
                            restrict_xpaths=P_S_C['page_restrict_xpaths'],
                            deny=P_S_C['deny'], canonicalize=True),
+             callback='parse_item',
              follow=True,
              process_links='process_page_links',
              process_request='process_page_request'),
