@@ -141,5 +141,5 @@ def requests_set_length():
 
 if __name__ == '__main__':
     # for i in range(5):
-    # start_new_spider()
-    restart_all_spider(get_all_crawling_spider())
+    start_new_spider()
+    # restart_all_spider(get_all_crawling_spider())

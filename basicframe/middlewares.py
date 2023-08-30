@@ -118,16 +118,16 @@ class ProxyMiddleware(object):
     def process_request(self, request, spider):
         # if self.counter % 100 == 0:
         #     self.update_proxy_pool()
-        proxy = "http://127.0.0.1:7890"
+        # proxy = "http://127.0.0.1:7890"
         headers = {
             "User-Agent": UserAgent().random
         }
         request.headers.update(headers)
-        request.meta["proxy"] = proxy
+        # request.meta["proxy"] = proxy
         # request.meta['proxy'] = random.choice(self.proxys)
 
         print(request.headers['User-Agent'])
-        print(f"TestProxyMiddleware --> {proxy}")
+        # print(f"TestProxyMiddleware --> {proxy}")
         self.counter += 1
 
     def process_response(self, request, response, spider):
