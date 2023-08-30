@@ -26,3 +26,4 @@ class ArticleItem(scrapy.Item):
     sub_domain = scrapy.Field()
     start_url = scrapy.Field()
     end_time = scrapy.Field()
+    start_time = scrapy.Field()
