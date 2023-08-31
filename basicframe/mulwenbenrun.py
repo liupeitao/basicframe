@@ -1,5 +1,6 @@
 import math
 import multiprocessing
+import socket
 import urllib
 from urllib.parse import urlparse
 
@@ -97,6 +98,7 @@ def start_new_spider():
     doc = processor.fetch_one(pipeline={"preprocess": True, "type": "00", 'status': 'ready'})
     args = build_args(doc)
     doc['status'] = 'crawling'
+    doc['process_host'] = socket.gethostname()
     processor.update(doc)
     start_crawl_site(**args)
 
