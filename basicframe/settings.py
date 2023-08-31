@@ -7,8 +7,6 @@ RETRY_TIMES: 1
 SPIDER_MODULES = ["basicframe.spiders"]
 NEWSPIDER_MODULE = "basicframe.spiders"
 
-
-
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
@@ -17,7 +15,7 @@ CONCURRENT_REQUESTS = 16
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 0
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 16
 CONCURRENT_REQUESTS_PER_IP = 16
@@ -28,14 +26,10 @@ COOKIES_ENABLED = False
 # Disable Telnet Console (enabled by default)
 TELNETCONSOLE_ENABLED = False
 
-
-
-
 DOWNLOADER_MIDDLEWARES = {
     # "basicframe.middlewares.BasicframeDownloaderMiddleware": 543,
     "basicframe.middlewares.ProxyMiddleware": 300
 }
-
 
 ITEM_PIPELINES = {
     # "basicframe.pipelines.BasicframePipeline": 301,
@@ -45,7 +39,6 @@ REDIRECT_ENABLED = True
 
 REACTOR_THREADPOOL_MAXSIZE = 20
 LOG_LEVEL = 'INFO'
-
 
 DOWNLOAD_TIMEOUT = 60
 
@@ -57,19 +50,16 @@ FEED_EXPORT_ENCODING = "utf-8"
 
 # scrapy -redis article
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"
-SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderPriorityQueue"
 # 使用 Redis 的去重过滤器
 DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 
 # 解析yaml文件配置
 import yaml
 
-
-
 # 获取当前文件的目录路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
 # 根据当前文件的目录路径拼接配置文件的路径
-config_file = os.path.join(current_dir, 'config.yaml')
+config_file = os.path.join(current_dir, 'dev_config.yaml')
 
 
 def load_config(file_path):
@@ -85,7 +75,6 @@ config = load_config(config_file)
 # 获取Redis配置
 REDIS_CONFIG = config['redis']
 REDIS_URL = REDIS_CONFIG['url']
-REDIS_URL_MUL = REDIS_CONFIG['url_mul']
 
 # 获取MySQL配置
 MYSQL_CONFIG = config['mysql']
@@ -119,4 +108,4 @@ MONGO_COLL_SITEINFO = mongodb_config['coll_siteinfo']
 # logger 配置
 logger_config = config['logger']
 LOGGER_SAVE_DIR = logger_config['saved']
-SCHEDULER_PERSIST = True  #将程序持久化保存
+SCHEDULER_PERSIST = True  # 将程序持久化保存

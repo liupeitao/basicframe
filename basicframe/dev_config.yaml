@@ -1,7 +1,6 @@
 # Redis配置
 redis:
-  url: redis://:qunyin@123@101.35.228.6:6379/4      #多文本生产环境库
-
+  url: redis://:qunyin@123@101.35.228.6:6379/5      # test
 # MySQL配置
 mysql:
   host: 106.15.10.74
@@ -12,11 +11,10 @@ mysql:
 
 # MongoDB配置
 mongodb:
+  db: test  # 存储文本的库
+  db_mul : test #
   url: mongodb://root:root123456@106.15.10.74:27017/admin  # "mongodb://qychap:qyno11-d@158.247.243.169:18000/?authSource=admin"
-  db: mulwenben  # 存储文本的库
-  coll: test    # 默认的coll
-
-  db_mul : mulwenben # 存储多语种文本网站的库
+  coll: test   #存储
   coll_siteinfo: siteinfo
 rabbitmq:
   host: localhost

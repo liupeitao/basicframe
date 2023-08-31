@@ -71,8 +71,8 @@ class LogHandler(logging.Logger):
             file_handler.setLevel(self.level)
         else:
             file_handler.setLevel(level)
-        formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
-
+        formatter = logging.Formatter('%(asctime)s [%(threadName)s] %(filename)s[line:%(lineno)d]-[at func:%(funcName)s] - %(levelname)s %(message)s')
+        # formatter = logging.Formatter('%(asctime)s [%(threadName)s] %(filename)s:%(lineno)d - %(levelname)s - %(funcName)s - %(message)s')
         file_handler.setFormatter(formatter)
         self.file_handler = file_handler
         self.addHandler(file_handler)

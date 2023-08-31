@@ -8,13 +8,13 @@ import redis
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-from basicframe.settings import REDIS_URL_MUL
+from basicframe.settings import REDIS_URL
 from basicframe.spiders.fullsitespider import FullSiteSpider
 from basicframe.spiders.genericspider import GenericSpider
 from basicframe.utils.logHandler import LogHandler
 from basicframe.utils.util import generate_std_name, current_date_time
 
-redis_client = redis.from_url(REDIS_URL_MUL)
+redis_client = redis.from_url(REDIS_URL)
 
 from basicframe.playground.sf import processor
 
@@ -83,8 +83,6 @@ def build_args(doc):
             'sub_domain': sub_domain,
             'lang': lang,
             'start_url': name,
-            'start_time': current_date_time(),
-            'end_time': 'unknown'
         },
         'type': site_type,
         'name': name,
@@ -98,9 +96,16 @@ def start_new_spider():
     doc = processor.fetch_one(pipeline={"preprocess": True, "type": "00", 'status': 'ready'})
     args = build_args(doc)
     doc['status'] = 'crawling'
+    doc['start_crawling'] = current_date_time()
     doc['process_host'] = socket.gethostname()
     processor.update(doc)
-    start_crawl_site(**args)
+    try:
+        start_crawl_site(**args)
+    except Exception as e:
+        doc['message'] = str(e)
+    doc['message'] = 'exit ok'
+    doc['end_crawling'] = current_date_time()
+    processor.update(doc)
 
 
 def restart_a_spider(doc):  # 重新启动中断过的爬虫
@@ -183,6 +188,6 @@ def judge_finish_bugs():
 
 if __name__ == '__main__':
     # for i in range(5):
-    # start_new_spider()
-    judge_finish_bugs()
+    start_new_spider()
+    # judge_finish_bugs()
     # restart_all_spiders(get_all_crawling_spider())

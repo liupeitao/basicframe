@@ -9,9 +9,9 @@ import time
 
 def start_new_spider(index):
     print(f'start{index} spider')
-    time.sleep(random.randint(10))
-
+    time.sleep(random.randint(2, 5))
     print(f'end{index} spider')
+
 def run_spiders(num_spiders=None, max_total_spiders=100):
     if num_spiders is None:
         num_spiders = multiprocessing.cpu_count()  # 默认使用CPU核心数量

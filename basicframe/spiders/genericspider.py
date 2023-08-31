@@ -29,9 +29,11 @@ class GenericSpider(RedisCrawlSpider):
 
     def process_page_links(self, links):
         processed_urls = self.not_recent_processed_links(links)
+        self.spider_logger.debug(f"processed_urls(page):{[link.url for link in processed_urls]}, remove:{len(links) - len(processed_urls)} links!!")
         return processed_urls
 
     def start_requests(self):
+        self.spider_logger.info(f"spider start!!!: {self.name} spider type: {self.type} {self.site_info}")
         yield scrapy.Request(self.name)
 
     def process_page_request(self, request: scrapy.Request, response):
@@ -41,9 +43,11 @@ class GenericSpider(RedisCrawlSpider):
 
     def custom_process_links(self, links):
         processed_urls = self.not_recent_processed_links(links)
+        self.spider_logger.debug(f"processed_urls(detail):{[link.url for link in processed_urls]}, remove:{len(links) - len(processed_urls)} links!!")
         return processed_urls
 
     def parse_item(self, response: HtmlResponse):
+        self.spider_logger.info(f"processing detail: {response.url}")
         article_item = extractor_articel(response)
         article_item.update(self.site_info)
         yield article_item
