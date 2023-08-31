@@ -23,8 +23,8 @@ Partial_Static_Crawling = {
                          r'elder/\d+',
                          r'pno=\d+',
                          r'page-\d+',
-                         r'/\d+/$',),
-    'page_restrict_xpaths': '//*[not(self::header or ancestor::header)]',
+                         r'/\d{1,5}/$',),
+    'page_restrict_xpaths': '//*[not(self::header or ancestor::header or self::footer or ancestor::footer)]',
     'deny': ('view_type=',)
 }
 

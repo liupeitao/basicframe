@@ -1,3 +1,4 @@
+import math
 import multiprocessing
 import urllib
 from urllib.parse import urlparse
@@ -162,14 +163,24 @@ def judge_finish_bugs():
         dup_key = spider['start_url'] + ':dupefilter'
         req_key = spider['start_url'] + ':requests'
         dup_lens = redis_client.scard(dup_key)
-        if 0 < dup_lens < 350 and not redis_client.exists(req_key):
-            # print(spider)
-            spider['status'] = 'bug'
+        if dup_lens > 0:
+            print(spider)
+        if not redis_client.exists(req_key):
+            if 0 < dup_lens < 100:
+                spider['status'] = 'error'
+            elif 150 < dup_lens < 300:
+                spider['status'] = 'bug'
+            elif 300 < dup_lens:
+                spider['status'] = 'finish'
+                spider['finish_time'] = current_date_time()
+                spider['total'] = math.ceil(dup_lens * 0.90)
+            else:
+                continue
             processor.update(spider)
 
 
 if __name__ == '__main__':
     # for i in range(5):
-    start_new_spider()
-    # judge_finish_bugs()
+    # start_new_spider()
+    judge_finish_bugs()
     # restart_all_spiders(get_all_crawling_spider())

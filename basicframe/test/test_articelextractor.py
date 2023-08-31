@@ -1,6 +1,6 @@
 import requests
 
-from basicframe.items.items import ArticleItem
+
 from basicframe.spiders.extractors.articelextractor import extractor_articel, newspaper_extractor, gne_extractor, goose_extractor
 
 response = requests.get('http://www.naewoeilbo.com/news/articleView.html?idxno=780771')
@@ -26,22 +26,22 @@ def measure_execution_time(num_repeats):
     return decorator
 
 
-@measure_execution_time(num_repeats=2)
+@measure_execution_time(num_repeats=200)
 def test_extractor_articel():
-    site_info = {'domain': 'f'}
-    item = extractor_articel(response, site_info)
+    item = extractor_articel(response)
+    print(item)
     assert item is not None
 
 
-@measure_execution_time(num_repeats=2)
+@measure_execution_time(num_repeats=100)
 def test_newspaper_extractor():
     newspaper_extractor(response.text)
 
-@measure_execution_time(num_repeats=2)
+@measure_execution_time(num_repeats=100)
 def test_gne_extractor():
     gne_extractor(response.text)
 
-@measure_execution_time(num_repeats=2)
+@measure_execution_time(num_repeats=100)
 def test_goose_extractor():
     goose_extractor(response.text)
 
