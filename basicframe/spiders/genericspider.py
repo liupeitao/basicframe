@@ -38,6 +38,7 @@ class GenericSpider(RedisCrawlSpider):
     def process_page_request(self, request: scrapy.Request, response):
         self.spider_logger.info(f"processing page: {request.url}")
         request.meta['max_retry_times'] = 3
+        request.meta['type'] = 'page'
         return request
 
     def custom_process_links(self, links):

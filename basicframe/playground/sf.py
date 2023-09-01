@@ -47,7 +47,7 @@ class DocumentProcessor:
 
     def process_document(self, hook_func):
         """处理文档"""
-        doc = self.fetch_random_one(condition={'vpn_need': 'unknown'})
+        doc = self.fetch_random_one(condition={'vpn_need': 'unknown', 'type': '00'})
         if doc:
             processed_doc = hook_func(doc)
             logger.info(f'processed {processed_doc}')

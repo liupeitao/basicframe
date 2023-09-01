@@ -102,9 +102,10 @@ def start_new_spider():
     processor.update(doc)
     try:
         start_crawl_site(**args)
+        doc['message'] = 'exit ok'
     except Exception as e:
+        doc['status'] = 'fatal'
         doc['message'] = str(e)
-    doc['message'] = 'exit ok'
     doc['end_crawling'] = current_date_time()
     processor.update(doc)
 
@@ -211,7 +212,7 @@ def run_spiders(num_spiders=None, max_total_spiders=100):
                     p.start()
                     processes[index] = p
                     started_spiders += 1
-        time.sleep(30)  # 间隔5秒钟再次检查进程状态
+        time.sleep(60)  # 间隔30秒钟再次检查进程状态
 
     # 等待剩下的进程完成
     for p in processes:
