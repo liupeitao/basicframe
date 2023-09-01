@@ -5,8 +5,12 @@
 import random
 
 import requests
+import scrapy.http
 from fake_useragent import UserAgent
 from scrapy import signals
+from twisted.internet.error import TCPTimedOutError
+
+from basicframe.utils.logHandler import LogHandler
 
 
 # useful for handling different item types with a single interface
@@ -108,27 +112,63 @@ class BasicframeDownloaderMiddleware:
 
 class ProxyMiddleware(object):
     def __init__(self):
-        self.counter = 0
+        self.counter = 1
         self.proxys = None
+        self.bad_response_code = set(range(400, 600)).union(range(100, 200))
+        self.vpn_proxy = "http://127.0.0.1:7890"
+        self.proxy = None
+        self.change_proxy_times = 0
+        self.chage_vpn_proxy_times = 0
+    def update_proxy_pool(self, logger: LogHandler):
+        logger.debug("it's time to update proxy_pool !!!")
+        try:
+            ip_port_list = requests.get("https://servers.qunyindata.com/GetWDProxy?count=5").json()["results"]
+            self.proxys = [f'http://{ip_port}' for ip_port in ip_port_list]
+        except Exception as e:
+            logger.warning(f'get random proxy faild, use default vpn_proxy {self.vpn_proxy}')
+            self.proxys = [self.vpn_proxy]
 
-    def update_proxy_pool(self):
-        ip_port_list = requests.get("https://servers.qunyindata.com/GetWDProxy?count=30").json()["results"]
-        self.proxys = [f'http://{ip_port}' for ip_port in ip_port_list]
+    def get_one_proxy(self, logger: LogHandler):
+        if not self.proxys:
+            self.update_proxy_pool(logger)
+        return random.choice(self.proxys)
 
-    def process_request(self, request, spider):
-        # if self.counter % 100 == 0:
-        #     self.update_proxy_pool()
-        proxy = "http://127.0.0.1:7890"
+    def process_request(self, request: scrapy.http.Request, spider):
+        # self.change_proxy_times += 1
         headers = {
             "User-Agent": UserAgent().random
         }
         request.headers.update(headers)
-        request.meta["proxy"] = proxy
-        # request.meta['proxy'] = random.choice(self.proxys)
-
+        request.meta['proxy'] = self.proxy
         print(request.headers['User-Agent'])
-        print(f"TestProxyMiddleware --> {proxy}")
-        self.counter += 1
+        print(f"TestProxyMiddleware --> {self.proxy}")
 
-    def process_response(self, request, response, spider):
-        return response
+    def process_response(self, request: scrapy.http.Request, response, spider):
+        logger = spider.spider_logger
+        if response.status in self.bad_response_code:
+            new_proxy = self.get_one_proxy(spider.spider_logger)
+            request.meta['proxy'] = new_proxy
+            if self.change_proxy_times > 20:
+                self.proxy = new_proxy
+            logger.error(f'{response.status} using new proxy in proxypool {new_proxy} <self.proxy: {self.proxy}> {request.url}')
+            return request.replace(dont_filter=True)
+        else:
+            return response
+
+    def process_exception(self, request: scrapy.http.Request, exception, spider):
+        if isinstance(exception, (TimeoutError, ConnectionError, TCPTimedOutError)):
+            spider.spider_logger.error("TimeoutError encountered, switching proxy...")
+
+        new_proxy = self.vpn_proxy
+        self.chage_vpn_proxy_times += 1
+        if self.chage_vpn_proxy_times > 10:
+            self.proxy = self.vpn_proxy
+            return request.replace(dont_filter=True)
+        elif new_proxy:
+            spider.spider_logger.info(f"using new proxy(vpn): {new_proxy} <self.proxy: {self.proxy}> {request.url}")
+            # 为请求设置新的代理，并重新调度
+            request.meta['proxy'] = new_proxy
+            return request.replace(dont_filter=True)
+        else:
+            return None  # 继续处理该异常
+
