@@ -120,16 +120,15 @@ class ProxyMiddleware(object):
         self.change_proxy_times = 0
         self.chage_vpn_proxy_times = 0
     def update_proxy_pool(self, logger: LogHandler):
-        logger.debug("it's time to update proxy_pool !!!")
         try:
-            ip_port_list = requests.get("https://servers.qunyindata.com/GetWDProxy?count=5").json()["results"]
+            ip_port_list = requests.get("https://servers.qunyindata.com/GetWDProxy?count=50").json()["results"]
             self.proxys = [f'http://{ip_port}' for ip_port in ip_port_list]
         except Exception as e:
             logger.warning(f'get random proxy faild, use default vpn_proxy {self.vpn_proxy}')
             self.proxys = [self.vpn_proxy]
 
     def get_one_proxy(self, logger: LogHandler):
-        if not self.proxys:
+        if not self.proxys or self.counter % 100 == 0:
             self.update_proxy_pool(logger)
         return random.choice(self.proxys)
 
@@ -139,36 +138,34 @@ class ProxyMiddleware(object):
             "User-Agent": UserAgent().random
         }
         request.headers.update(headers)
-        request.meta['proxy'] = self.proxy
+        # request.meta['proxy'] = None
         print(request.headers['User-Agent'])
-        print(f"TestProxyMiddleware --> {self.proxy}")
+        # print(f"TestProxyMiddleware --> {request.meta['proxy']}")
 
-    def process_response(self, request: scrapy.http.Request, response, spider):
-        logger = spider.spider_logger
-        if response.status in self.bad_response_code:
-            new_proxy = self.get_one_proxy(spider.spider_logger)
-            request.meta['proxy'] = new_proxy
-            if self.change_proxy_times > 20:
-                self.proxy = new_proxy
-            logger.error(f'{response.status} using new proxy in proxypool {new_proxy} <self.proxy: {self.proxy}> {request.url}')
-            return request.replace(dont_filter=True)
-        else:
-            return response
+    # def process_response(self, request: scrapy.http.Request, response, spider):
+    #     logger = spider.spider_logger
+    #     if response.status in self.bad_response_code:
+    #         new_proxy = self.get_one_proxy(spider.spider_logger)
+    #         request.meta['proxy'] = new_proxy
+    #         logger.error(f'{response.status} using new proxy in proxypool {new_proxy} <self.proxy: {self.proxy}> {request.url}')
+    #         return request.replace(dont_filter=True)
+    #     else:
+    #         return response
 
-    def process_exception(self, request: scrapy.http.Request, exception, spider):
-        if isinstance(exception, (TimeoutError, ConnectionError, TCPTimedOutError)):
-            spider.spider_logger.error("TimeoutError encountered, switching proxy...")
-
-        new_proxy = self.vpn_proxy
-        self.chage_vpn_proxy_times += 1
-        if self.chage_vpn_proxy_times > 10:
-            self.proxy = self.vpn_proxy
-            return request.replace(dont_filter=True)
-        elif new_proxy:
-            spider.spider_logger.info(f"using new proxy(vpn): {new_proxy} <self.proxy: {self.proxy}> {request.url}")
-            # 为请求设置新的代理，并重新调度
-            request.meta['proxy'] = new_proxy
-            return request.replace(dont_filter=True)
-        else:
-            return None  # 继续处理该异常
+    # def process_exception(self, request: scrapy.http.Request, exception, spider):
+    #     if isinstance(exception, (TimeoutError, ConnectionError, TCPTimedOutError)):
+    #         spider.spider_logger.error("TimeoutError encountered, switching proxy...")
+    #
+    #     new_proxy = self.vpn_proxy
+    #     self.chage_vpn_proxy_times += 1
+    #     if self.chage_vpn_proxy_times > 10:
+    #         self.proxy = self.vpn_proxy
+    #         return request.replace(dont_filter=True)
+    #     elif new_proxy:
+    #         spider.spider_logger.info(f"using new proxy(vpn): {new_proxy} <self.proxy: {self.proxy}> {request.url}")
+    #         # 为请求设置新的代理，并重新调度
+    #         request.meta['proxy'] = new_proxy
+    #         return request.replace(dont_filter=True)
+    #     else:
+    #         return None  # 继续处理该异常
 

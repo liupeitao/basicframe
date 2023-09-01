@@ -1,6 +1,7 @@
 import math
 import multiprocessing
 import socket
+import time
 import urllib
 from urllib.parse import urlparse
 
@@ -93,7 +94,7 @@ def build_args(doc):
 
 
 def start_new_spider():
-    doc = processor.fetch_random_one({"preprocess": True, "type": "00", 'status': 'ready'})
+    doc = processor.fetch_random_one({"preprocess": True, "vpn_need": False, "type": "00", 'status': 'ready'})
     args = build_args(doc)
     doc['status'] = 'crawling'
     doc['start_crawling'] = current_date_time()
@@ -185,9 +186,40 @@ def judge_finish_bugs():
                 continue
             processor.update(spider)
 
+def run_spiders(num_spiders=None, max_total_spiders=100):
+    if num_spiders is None:
+        num_spiders = min(12, multiprocessing.cpu_count())  # 默认使用CPU核心数量
 
+    started_spiders = 0  # 已启动的爬虫数量
+    processes = []
+
+    # 启动初始爬虫
+    for index in range(num_spiders):
+        if started_spiders < max_total_spiders:
+            p = multiprocessing.Process(target=start_new_spider)
+            p.start()
+            processes.append(p)
+            started_spiders += 1
+
+    while started_spiders < max_total_spiders:
+        # 检查每个进程，看它是否还在运行
+        for index in range(len(processes)):
+            if not processes[index].is_alive():
+                # 如果进程不再运行，并且还没有达到历史最大任务数，则启动新的进程
+                if started_spiders < max_total_spiders:
+                    p = multiprocessing.Process(target=start_new_spider)
+                    p.start()
+                    processes[index] = p
+                    started_spiders += 1
+        time.sleep(30)  # 间隔5秒钟再次检查进程状态
+
+    # 等待剩下的进程完成
+    for p in processes:
+        p.join()
+
+    print("All tasks completed.")
 if __name__ == '__main__':
     # for i in range(5):
-    start_new_spider()
+    run_spiders()
     # judge_finish_bugs()
     # restart_all_spiders(get_all_crawling_spider())
