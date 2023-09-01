@@ -93,7 +93,7 @@ def build_args(doc):
 
 
 def start_new_spider():
-    doc = processor.fetch_one(pipeline={"preprocess": True, "type": "00", 'status': 'ready'})
+    doc = processor.fetch_random_one({"preprocess": True, "type": "00", 'status': 'ready'})
     args = build_args(doc)
     doc['status'] = 'crawling'
     doc['start_crawling'] = current_date_time()

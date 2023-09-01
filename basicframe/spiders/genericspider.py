@@ -6,12 +6,12 @@ from scrapy_redis.spiders import RedisCrawlSpider
 
 from basicframe.spiders.extractors.articelextractor import extractor_articel
 
-recent_urls_set = set()
 from basicframe.siteinfosettings import Partial_Static_Crawling as P_S_C
 
 
 # 适用于部分分页。会有一点误差。
 class GenericSpider(RedisCrawlSpider):
+    recent_urls_set = set()
     rules = (
         Rule(LinkExtractor(allow=P_S_C['page_allow_tuple'],
                            restrict_xpaths=P_S_C['page_restrict_xpaths'],
@@ -29,7 +29,6 @@ class GenericSpider(RedisCrawlSpider):
 
     def process_page_links(self, links):
         processed_urls = self.not_recent_processed_links(links)
-        self.spider_logger.debug(f"processed_urls(page):{[link.url for link in processed_urls]}, remove:{len(links) - len(processed_urls)} links!!")
         return processed_urls
 
     def start_requests(self):
@@ -43,7 +42,6 @@ class GenericSpider(RedisCrawlSpider):
 
     def custom_process_links(self, links):
         processed_urls = self.not_recent_processed_links(links)
-        self.spider_logger.debug(f"processed_urls(detail):{[link.url for link in processed_urls]}, remove:{len(links) - len(processed_urls)} links!!")
         return processed_urls
 
     def parse_item(self, response: HtmlResponse):
@@ -52,14 +50,14 @@ class GenericSpider(RedisCrawlSpider):
         article_item.update(self.site_info)
         yield article_item
 
-    @staticmethod
-    def not_recent_processed_links(links):
-        ok_links = []
+    def not_recent_processed_links(self, links):
+        processed_urls = []
         for link in links:
-            if link.url not in recent_urls_set:
-                recent_urls_set.add(link.url)
-                ok_links.append(link)
-        if len(recent_urls_set) == 8192:
-            recent_urls_set.clear()
-        return ok_links
-
+            if link.url not in self.recent_urls_set:
+                self.recent_urls_set.add(link.url)
+                processed_urls.append(link)
+        if len(self.recent_urls_set) == 10240:
+            self.recent_urls_set.clear()
+        self.spider_logger.debug(
+            f"processed_urls:{[link.url for link in processed_urls]}, remove:{len(links) - len(processed_urls)} links!!")
+        return processed_urls

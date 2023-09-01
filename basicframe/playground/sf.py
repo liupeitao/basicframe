@@ -29,6 +29,14 @@ class DocumentProcessor:
         doc = self.collection.find_one(pipeline)
         return doc
 
+    def fetch_random_one(self, condition):
+        pipeline = [
+            {"$match": condition},
+            {"$sample": {"size": 1}}
+        ]
+        doc = self.collection.aggregate(pipeline=pipeline).next()
+        return doc
+
     def fetch(self, pipeline):
         docs_cursor = self.collection.find(pipeline)
         return docs_cursor
