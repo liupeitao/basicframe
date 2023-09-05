@@ -59,7 +59,7 @@ import yaml
 # 获取当前文件的目录路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
 # 根据当前文件的目录路径拼接配置文件的路径
-config_file = os.path.join(current_dir, 'config.yaml')
+config_file = os.path.join(current_dir, 'dev_config.yaml')
 
 
 def load_config(file_path):

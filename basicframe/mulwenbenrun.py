@@ -94,7 +94,7 @@ def build_args(doc):
 
 
 def start_new_spider():
-    doc = processor.fetch_random_one({"preprocess": True, "vpn_need": False, "type": "00", 'status': 'ready'})
+    doc = processor.fetch_random_one({"preprocess": True, "vpn_need": False, "type": "00", 'status': 'crawling'})
     args = build_args(doc)
     doc['status'] = 'crawling'
     doc['start_crawling'] = current_date_time()
@@ -189,7 +189,7 @@ def judge_finish_bugs():
 
 def run_spiders(num_spiders=None, max_total_spiders=100):
     if num_spiders is None:
-        num_spiders = min(12, multiprocessing.cpu_count())  # 默认使用CPU核心数量
+        num_spiders = min(2, multiprocessing.cpu_count())  # 默认使用CPU核心数量
 
     started_spiders = 0  # 已启动的爬虫数量
     processes = []
@@ -222,5 +222,6 @@ def run_spiders(num_spiders=None, max_total_spiders=100):
 if __name__ == '__main__':
     # for i in range(5):
     run_spiders()
+
     # judge_finish_bugs()
     # restart_all_spiders(get_all_crawling_spider())

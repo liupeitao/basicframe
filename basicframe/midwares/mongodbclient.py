@@ -16,15 +16,8 @@ __author__ = 'pting'
 
 from pymongo import MongoClient
 from redis.exceptions import TimeoutError, ConnectionError, ResponseError
-from redis.connection import BlockingConnectionPool
-
-from random import choice
-from redis import Redis
-import json
 
 import basicframe.settings
-from basicframe.midwares.dbclient import DbClient
-from basicframe.settings import MONGO_DB, MONGO_COLL
 from basicframe.utils.logHandler import LogHandler
 
 
@@ -46,9 +39,9 @@ class MongodbClient(object):
         :param db: db
         :return:
         """
-        self.db = basicframe.settings.MONGO_DB
-        kwargs.pop("db")
+        self.db = kwargs['db']
         self.coll = basicframe.settings.MONGO_COLL
+        kwargs.pop("db")  # 为了能实现 change_db
         self.__conn = MongoClient(**kwargs)
 
     def get_random_one(self):
@@ -138,11 +131,17 @@ class MongodbClient(object):
 
     def change_table(self, coll):
         """
-        切换操作对象
-        :param queue_name:
+        切换操作集合
+        :param coll:
         :return:
         """
         self.coll = coll
+
+    def change_db(self, db):
+        self.db = db
+
+    def conn(self):
+        return self.__conn[self.db][self.coll]
 
     def test(self):
         log = LogHandler('mongo_client')
@@ -161,4 +160,3 @@ class MongodbClient(object):
     def get_all_keyword(self):
         # return super().get_all_keyword()
         raise NotImplementedError
-

@@ -1,5 +1,7 @@
 import redis
 from pymongo import MongoClient
+
+from basicframe.midwares.dbclient import DbClient
 from basicframe.settings import MONGO_DB_MUL, MONGO_URL, MONGO_COLL_SITEINFO
 from basicframe.filters.filter import judge_type
 
@@ -11,9 +13,10 @@ coll_name = MONGO_COLL_SITEINFO
 
 class DocumentProcessor:
     def __init__(self, mongo_url, db_name, coll_name):
-        self.client = MongoClient(mongo_url)
-        self.db = self.client[db_name]
-        self.collection = self.db[coll_name]
+        self.db_client = DbClient(mongo_url)
+        self.db_client.change_db(db_name)
+        self.db_client.change_table(coll_name)
+        self.collection = self.db_client.conn()
         self.started = False
         self.docs = None
 

@@ -1,6 +1,6 @@
 # Redis配置
 redis:
-  url: redis://:qunyin@123@101.35.228.6:6379/4      #多文本生产环境库
+  url: redis://:qunyin@123@124.220.100.192:6379/4      #多文本生产环境库
 
 # MySQL配置
 mysql:

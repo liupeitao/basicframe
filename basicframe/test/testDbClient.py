@@ -13,6 +13,7 @@
 __author__ = 'JHao'
 
 from basicframe.midwares.dbclient import DbClient
+from basicframe.settings import MONGO_URL
 
 
 def testDbClient():
@@ -25,9 +26,11 @@ def testDbClient():
     # assert s.db_port == 8888
 
 
-    k = DbClient("mongodb://root:root123456@106.15.10.74:27017/admin")
-
+    k = DbClient(MONGO_URL)
+    print(k.db_name + '\n')
+    k.change_db('test')
     k.change_table('siteinfo')
+
     my_pipeline = [
         {'$match': {'type': '00'}},
         {'$sample': {'size': 5}}

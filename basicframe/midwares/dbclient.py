@@ -18,11 +18,6 @@ import os
 import sys
 from urllib.parse import urlparse
 
-from basicframe.utils.singleton import Singleton
-from basicframe.utils.util import withMetaclass
-
-
-
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -86,15 +81,19 @@ class DbClient(object):
             pass
         assert __type, 'type error, Not support DB type: {}'.format(self.db_type)
         self.client = getattr(__import__(__type.lower()), "%sClient" % self.db_type.title())(host=self.db_host,
-                                                                                     port=self.db_port,
-                                                                                     username=self.db_user,
-                                                                                     password=self.db_pwd,
-                                                                                     db=self.db_name)
+                                                                                             port=self.db_port,
+                                                                                             username=self.db_user,
+                                                                                             password=self.db_pwd,
+                                                                                             db=self.db_name)
+
     def get_random_one(self):
         return self.client.get_random_one()
 
     def get(self, **kwargs):
         return self.client.get(**kwargs)
+
+    def conn(self):
+        return self.client.conn()
 
     def put(self, key, **kwargs):
         return self.client.put(key, **kwargs)
@@ -119,6 +118,9 @@ class DbClient(object):
 
     def change_table(self, name):
         self.client.change_table(name)
+
+    def change_db(self, db):
+        self.client.change_db(db)
 
     def get_count(self):
         return self.client.get_count()
