@@ -94,7 +94,7 @@ def build_args(doc):
 
 
 def start_new_spider():
-    doc = processor.fetch_random_one({"preprocess": True, "vpn_need": False, "type": "00", 'status': 'crawling'})
+    doc = processor.fetch_random_one({"preprocess": True, "vpn_need": False, "type": "00", 'status': 'ready'})
     args = build_args(doc)
     doc['status'] = 'crawling'
     doc['start_crawling'] = current_date_time()
@@ -102,10 +102,11 @@ def start_new_spider():
     processor.update(doc)
     try:
         start_crawl_site(**args)
+        update_finish_spider_status(doc)
         doc['message'] = 'exit ok'
     except Exception as e:
         doc['status'] = 'fatal'
-        doc['message'] = str(e)
+        doc['message'] = str(e) + str(current_date_time())
     doc['end_crawling'] = current_date_time()
     processor.update(doc)
 
@@ -131,14 +132,23 @@ def crawling_spider_list_from_redis():
     return spider_list
 
 
+def finish_spider_list_from_redis():
+    spider_list = [key.decode() for key in redis_client.keys() if 'dupefilter' in key.decode()]
+    return spider_list
+
+
 def update_spiders_status():
-    try:
+    try:  # 依据dupe队列数量更新状态,
         crawling_url_list = crawling_spider_list_from_redis()
+        finish_url_list = finish_spider_list_from_redis()
         docs = processor.fetch(pipeline={'status': 'crawling'})
         for doc in docs:
-            if f"{doc['start_url']}:requests" not in crawling_url_list:
-                doc['status'] = 'finish'
-                processor.update(doc)
+            if f"{doc['start_url']}:requests" not in crawling_url_list and f"{doc['start_url']}:dupefilter" in finish_url_list:
+                print(f"存在dup队列 无req队列 更新状态{doc['start_url']}")
+                update_finish_spider_status(doc)
+            else:
+                print(f'$正在运行中 无法更新状态: {doc["start_url"]}')
+                continue
     except Exception as e:
         # You can use logging or print to see the error.
         print(f"Error occurred while updating spider status: {e}")
@@ -166,14 +176,38 @@ def get_finished_spiders():
     return list(docs)
 
 
+def update_finish_spider_status(doc):
+    dup_key = doc['start_url'] + ':dupefilter'
+    req_key = doc['start_url'] + ':requests'
+    dup_lens = redis_client.scard(dup_key)
+    if dup_lens > 0:
+        print("存在dupe不存在req队列:", doc)
+    else:
+        return
+    if not redis_client.exists(req_key):
+        if 0 < dup_lens < 100:
+            doc['status'] = 'error'
+        elif 150 < dup_lens < 300:
+            doc['status'] = 'bug'
+        elif 300 < dup_lens:
+            doc['status'] = 'finish'
+        doc['finish_time'] = current_date_time()
+        doc['total'] = math.ceil(dup_lens * 0.75)
+        processor.update(doc)
+
+
 def judge_finish_bugs():
     spiders = get_finished_spiders()
     for spider in spiders:
+        if spider['total'] != 0:
+            continue
         dup_key = spider['start_url'] + ':dupefilter'
         req_key = spider['start_url'] + ':requests'
         dup_lens = redis_client.scard(dup_key)
         if dup_lens > 0:
             print(spider)
+        else:
+            continue
         if not redis_client.exists(req_key):
             if 0 < dup_lens < 100:
                 spider['status'] = 'error'
@@ -182,14 +216,13 @@ def judge_finish_bugs():
             elif 300 < dup_lens:
                 spider['status'] = 'finish'
                 spider['finish_time'] = current_date_time()
-                spider['total'] = math.ceil(dup_lens * 0.90)
-            else:
-                continue
+            spider['total'] = math.ceil(dup_lens * 0.90)
             processor.update(spider)
+
 
 def run_spiders(num_spiders=None, max_total_spiders=100):
     if num_spiders is None:
-        num_spiders = min(2, multiprocessing.cpu_count())  # 默认使用CPU核心数量
+        num_spiders = min(36, multiprocessing.cpu_count())  # 默认使用CPU核心数量
 
     started_spiders = 0  # 已启动的爬虫数量
     processes = []
@@ -219,9 +252,11 @@ def run_spiders(num_spiders=None, max_total_spiders=100):
         p.join()
 
     print("All tasks completed.")
+
+
 if __name__ == '__main__':
     # for i in range(5):
     run_spiders()
+    # update_spiders_status()
 
-    # judge_finish_bugs()
     # restart_all_spiders(get_all_crawling_spider())
