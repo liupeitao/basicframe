@@ -1,5 +1,6 @@
-import scrapy
 import datetime
+
+import scrapy
 from scrapy.utils.project import get_project_settings
 
 import basicframe.settings
@@ -7,6 +8,17 @@ from basicframe.midwares.dbclient import DbClient
 
 
 class ArticleSpiderPipeline:
+    def process_item(self, item: scrapy.Item, spider):
+        try:
+            if len(item['content']) > 50:
+                return item
+        except KeyError as e:
+            pass
+        except Exception as e:
+            pass
+
+
+class MongoPipeLine:
     settings = get_project_settings()
 
     def open_spider(self, spider):
@@ -18,13 +30,10 @@ class ArticleSpiderPipeline:
 
     def process_item(self, item: scrapy.Item, spider):
         try:
-            if len(item['content']) > 50:
-                item = dict(item)
-                print(item)
-                self.db_client.put(item)
-        except KeyError as e:
-            self.spider_logger.error(f"no content field {item}")
+            item = dict(item)
+            print(item)
+            self.db_client.put(item)
         except ConnectionError as e:
-            self.spider_logger.error(f"can't insert to mongo network error mongo or server break down: {item}")
+            self.spider_logger.error(f"can't insert to database network error  or server break down: {item}")
         except Exception as e:
             pass
