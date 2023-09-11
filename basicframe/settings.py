@@ -33,7 +33,8 @@ DOWNLOADER_MIDDLEWARES = {
 
 ITEM_PIPELINES = {
     # "basicframe.pipelines.BasicframePipeline": 301,
-    "basicframe.pipelines.articlespiderpipeline.ArticleSpiderPipeline": 301
+    "basicframe.pipelines.articlespiderpipeline.ArticleSpiderPipeline": 301,
+    "basicframe.pipelines.articlespiderpipeline.MongoPipeLine":302
 }
 REDIRECT_ENABLED = True
 

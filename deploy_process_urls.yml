@@ -2,10 +2,7 @@
   become: yes
   tasks:
 
-
-
-
-  - name: Synchronize the project directory excluding certain file types
+  - name: Syn`chronize the project directory excluding certain file types
     synchronize:
       src: /home/ptking/basicframe/
       dest: ~/projects/basicframe/
