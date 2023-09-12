@@ -94,7 +94,7 @@ def build_args(doc):
 
 
 def start_new_spider():
-    doc = processor.fetch_random_one({"preprocess": True, "vpn_need": False, "type": "00", 'status': 'crawling', 'process_host':'f'})
+    doc = processor.fetch_random_one({"preprocess": True, "vpn_need": False, "type": "00", 'status': 'crawling'})
     args = build_args(doc)
     doc['status'] = 'crawling'
     doc['start_crawling'] = current_date_time()
@@ -122,7 +122,6 @@ def restart_a_spider(doc):  # 重新启动中断过的爬虫
 
 
 def get_all_crawling_spider():
-    update_spiders_status()
     docs = processor.fetch(pipeline={'status': 'crawling'})
     return list(docs)
 
@@ -144,10 +143,13 @@ def update_spiders_status():
         docs = processor.fetch(pipeline={'status': 'crawling'})
         for doc in docs:
             if f"{doc['start_url']}:requests" not in crawling_url_list and f"{doc['start_url']}:dupefilter" in finish_url_list:
-                print(f"存在dup队列 无req队列 更新状态{doc['start_url']}")
+                print(f"存在dup队列 无req队列 *****更新状态{doc['start_url']}")
                 update_finish_spider_status(doc)
-            else:
+            elif f"{doc['start_url']}:requests" in crawling_url_list:
                 print(f'$正在运行中 无法更新状态: {doc["start_url"]}')
+            elif f"{doc['start_url']}:dupefilter" not in finish_url_list:
+                print("曾经可能运行过")
+                update_finish_spider_status(doc)
                 continue
     except Exception as e:
         # You can use logging or print to see the error.
@@ -180,17 +182,22 @@ def update_finish_spider_status(doc):
     dup_key = doc['start_url'] + ':dupefilter'
     req_key = doc['start_url'] + ':requests'
     dup_lens = redis_client.scard(dup_key)
-    if dup_lens > 0:
-        print("存在dupe不存在req队列:", doc)
-    else:
-        return
+    if not redis_client.exists(dup_key):
+        if doc['status'] == 'crawling':
+            doc['status'] = 'finish'
+            doc['message'] = '曾经可能运行过'
+            processor.update(doc)
+            return
+        else:
+            return
     if not redis_client.exists(req_key):
-        if 0 < dup_lens < 100:
+        if 0 <= dup_lens <= 100:
             doc['status'] = 'error'
-        elif 150 < dup_lens < 300:
+        elif 100 < dup_lens <= 300:
             doc['status'] = 'bug'
         elif 300 < dup_lens:
             doc['status'] = 'finish'
+
         doc['finish_time'] = current_date_time()
         doc['total'] = math.ceil(dup_lens * 0.75)
         processor.update(doc)
@@ -209,6 +216,9 @@ def judge_finish_bugs():
         else:
             continue
         if not redis_client.exists(req_key):
+            if 0 == dup_lens:
+                spider['status'] = 'finish'
+                spider['message'] = '先前下载过。或者其他'
             if 0 < dup_lens < 100:
                 spider['status'] = 'error'
             elif 150 < dup_lens < 300:
@@ -254,9 +264,21 @@ def run_spiders(num_spiders=None, max_total_spiders=100):
     print("All tasks completed.")
 
 
+
+
 if __name__ == '__main__':
     # for i in range(5):
-    run_spiders()
+    run_spiders(num_spiders=1)
     # update_spiders_status()
-
+    # docs = get_all_crawling_spider()
+    # reqs = crawling_spider_list_from_redis()
+    # sfe =[]
+    # for d in docs:
+    #     sfe.append(d['start_url']+':'+'requests')
+    # reqs = set(reqs)
+    # sfe = set(sfe)
+    # for s in reqs:
+    #     if s not in sfe:
+    #         print(s)
+    # update_spiders_status()
     # restart_all_spiders(get_all_crawling_spider())

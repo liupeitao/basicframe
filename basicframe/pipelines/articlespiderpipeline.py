@@ -22,7 +22,7 @@ class MongoPipeLine:
     settings = get_project_settings()
 
     def open_spider(self, spider):
-        self.db_client = DbClient(spider.settings['MONGO_URL'])
+        self.db_client = DbClient(spider.settings['MONGO_LOCAL_URL'])
         self.db_client.change_db(
             f"{basicframe.settings.MONGO_DB}_{str(datetime.datetime.now().date())}")  # 每天都有新数据库， 手机前天的数据库。
         self.db_client.change_table(spider.site_info['lang'])

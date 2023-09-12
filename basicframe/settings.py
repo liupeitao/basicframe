@@ -60,7 +60,7 @@ import yaml
 # 获取当前文件的目录路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
 # 根据当前文件的目录路径拼接配置文件的路径
-config_file = os.path.join(current_dir, 'config.yaml')
+config_file = os.path.join(current_dir, 'dev_config.yaml')
 
 
 def load_config(file_path):
@@ -102,6 +102,7 @@ RABBITMQ_VIRTUAL_HOST = rabbitmq_config['virtual_host']
 # mongodb 配置
 mongodb_config = config['mongodb']
 MONGO_URL = mongodb_config['url']
+MONGO_LOCAL_URL = mongodb_config['local_url']
 MONGO_DB = mongodb_config['db']
 MONGO_DB_MUL = mongodb_config['db_mul']
 MONGO_COLL = mongodb_config['coll']
