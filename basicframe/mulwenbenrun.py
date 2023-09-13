@@ -94,7 +94,7 @@ def build_args(doc):
 
 
 def start_new_spider():
-    doc = processor.fetch_random_one({"preprocess": True, "vpn_need": False, "type": "00", 'status': 'crawling'})
+    doc = processor.fetch_random_one({"preprocess": True, "vpn_need": False, "type": "00", 'status': 'crawling', 'process_host':'f'})
     args = build_args(doc)
     doc['status'] = 'crawling'
     doc['start_crawling'] = current_date_time()
@@ -268,7 +268,7 @@ def run_spiders(num_spiders=None, max_total_spiders=100):
 
 if __name__ == '__main__':
     # for i in range(5):
-    run_spiders(num_spiders=1)
+    run_spiders()
     # update_spiders_status()
     # docs = get_all_crawling_spider()
     # reqs = crawling_spider_list_from_redis()

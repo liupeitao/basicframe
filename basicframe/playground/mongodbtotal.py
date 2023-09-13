@@ -47,16 +47,18 @@
 #
 #
 import json
-
+from basicframe.settings import MONGO_LOCAL_URL, MONGO_URL
 # import json
 #
 from pymongo import MongoClient
 from pathlib2 import Path
 # Connect to MongoDB
-client = MongoClient('mongodb://root:root123456@106.15.10.74:27017/admin')
-db = client['mulwenben']
+client = MongoClient(MONGO_URL)
+name = '2023-09-05'
+db = client[f'mulwenben_{name}']
 count = 0
-dir = Path('/media/ptking/data/mulwenwen/0906')
+dir = Path(f'/media/ptking/data/mulwenwen/{name}/jsons')
+dir.mkdir(parents=True, exist_ok=True)
 # Calculate total document count across all collections
 for collection in db.list_collection_names():
     collection = collection.strip()

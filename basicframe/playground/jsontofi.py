@@ -2,8 +2,11 @@ import json
 
 from pathlib2 import Path
 
+def replace_newlines(s):
+    return s.replace('\n\n', '\r\n')
 
 def process_per_line(doc, path: Path):
+    doc['content'] = replace_newlines(doc['content'])
     if str(doc.get('domain')) and str(doc.get('domain')) != 'nan' and str(doc.get('domain')) != '/':
         domain_dir = Path(path / doc.get('domain'))
         if str(doc.get('sub_domain')) and str(doc.get('sub_domain')) != 'nan' and str(doc.get('sub_domain')) != '/':
@@ -21,7 +24,7 @@ def process_per_line(doc, path: Path):
     except Exception:
         pass
     save_path = Path(subdomain / 'articel').with_suffix('.json')
-    with open(save_path, mode='w') as f:
+    with open(save_path, mode='a') as f:
         f.write(json.dumps(doc, ensure_ascii=False) + '\n')
 
 
@@ -33,6 +36,12 @@ def procss_per_file(file_path: Path, dir):
             process_per_line(json.loads(line), dir)
             x += 1
 
+
+
+# 测试
+test_str = "Hello\n\nWorld"
+print(replace_newlines(test_str))  # 输出：Hello\r\nWorld
+
 def json_dir_to_file(json_dir: Path, save_dir:Path):
     for s in json_dir.glob('*.json'):
         procss_per_file(s, save_dir/s.stem)
@@ -40,6 +49,7 @@ def json_dir_to_file(json_dir: Path, save_dir:Path):
 
 
 if __name__ == '__main__':
-    jons_dir = Path('/media/ptking/data/mulwenwen/0906')
-    save_dir = Path('/media/ptking/data/mulwenwen/test')
+    name = '2023-09-05'
+    jons_dir = Path(f'/media/ptking/data/mulwenwen/{name}/jsons')
+    save_dir = Path(f'/media/ptking/data/mulwenwen/{name}/res')
     json_dir_to_file(jons_dir, save_dir)
