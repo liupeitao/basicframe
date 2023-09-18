@@ -197,9 +197,8 @@ def update_finish_spider_status(doc):
             doc['status'] = 'bug'
         elif 300 < dup_lens:
             doc['status'] = 'finish'
-
         doc['finish_time'] = current_date_time()
-        doc['total'] = math.ceil(dup_lens * 0.75)
+        doc['total'] = math.ceil(dup_lens)
         processor.update(doc)
 
 

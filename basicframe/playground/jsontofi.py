@@ -49,7 +49,7 @@ def json_dir_to_file(json_dir: Path, save_dir:Path):
 
 
 if __name__ == '__main__':
-    name = '2023-09-05'
-    jons_dir = Path(f'/media/ptking/data/mulwenwen/{name}/jsons')
-    save_dir = Path(f'/media/ptking/data/mulwenwen/{name}/res')
+    name = '2023-09-12'
+    jons_dir = Path(f'/home/ptking/Documents/aliyun - imported on 2023年8月17日/mulwenben_{name}/jsons')
+    save_dir = Path(f'/home/ptking/Documents/aliyun - imported on 2023年8月17日/mulwenben_{name}/res')
     json_dir_to_file(jons_dir, save_dir)

@@ -16,6 +16,7 @@ Site type 1 部分静态
 
 Partial_Static_Crawling = {
     'page_allow_tuple': (r'page=',
+                         r'p=\d+',
                          r'&page',
                          r'page/\d+',
                          r'index\.\d+',
