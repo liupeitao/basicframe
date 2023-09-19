@@ -47,14 +47,14 @@
 #
 #
 import json
-from basicframe.settings import MONGO_LOCAL_URL, MONGO_URL
+
 # import json
 #
 from pymongo import MongoClient
 from pathlib2 import Path
 # Connect to MongoDB
-client = MongoClient(MONGO_URL)
-name = '2023-09-05'
+client = MongoClient("mongodb://root:root123456@106.15.10.74:27017/admin")
+name = '2023-09-13'
 db = client[f'mulwenben_{name}']
 count = 0
 dir = Path(f'/media/ptking/data/mulwenwen/{name}/jsons')
@@ -66,7 +66,7 @@ for collection in db.list_collection_names():
     if Path.exists(path):
         continue
     if 'http' not in collection and 'sit' not in collection:
-        docs = db[collection].find({}, {'_id': 0})
+        docs = db[collection].find({}, {'_id': 0, 'start_url':0, 'yield_time':0})
         with open(path, mode='a') as f:
             for doc in docs:
                 f.write(json.dumps(doc) + '\n')

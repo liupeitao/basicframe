@@ -12,7 +12,7 @@ mysql:
 
 # MongoDB配置
 mongodb:
-  url: mongodb://root:root123456@106.15.10.74:27017  # "mongodb://qychap:qyno11-d@158.247.243.169:18000/?authSource=admin"
+  url: mongodb://root:root123456@139.177.178.116:27017/  # "mongodb://qychap:qyno11-d@158.247.243.169:18000/?authSource=admin"
   local_url: mongodb://admin:Liupeitao1.@localhost:27017
   db: mulwenben  # 存储文本的库
   coll: test    # 默认的coll

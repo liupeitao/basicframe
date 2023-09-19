@@ -42,7 +42,7 @@ client = MongoDBClient().connect()
 db = client["defalult_db"]  # 替换为你要导出的数据库名字
 # collection_names = db.list_collection_names()
 
-process_one_coll(db['https://www.thedrive.com/the-war-zone'], 'thedrive_政治_0815')
+process_one_coll(db['https://www.thedrive.com/the-war-zone'])
 #
 # for name in collection_names:
 #     process_one_coll(db[name], name)
