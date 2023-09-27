@@ -12,3 +12,4 @@ def test_page_allow_tuple():
             flag = True
             break
     assert flag, "No pattern from page_substr_tuple found in the URL."
+

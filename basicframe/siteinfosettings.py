@@ -18,6 +18,7 @@ Partial_Static_Crawling = {
     'page_allow_tuple': (r'page=',
                          r'p=\d+',
                          r'&page',
+                         r'&p=',
                          r'page/\d+',
                          r'index\.\d+',
                          r'[\?&]page=\d+',

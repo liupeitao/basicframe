@@ -14,6 +14,7 @@ mongodb:
   db: test  # 存储文本的库
   db_mul : test #
   url: mongodb://root:root123456@106.15.10.74:27017  # "mongodb://qychap:qyno11-d@158.247.243.169:18000/?authSource=admin"
+  mul_url: mongodb://root:root123456@106.15.10.74:27017  # "mongodb://qychap:qyno11-d@158.247.243.169:18000/?authSource=admin"
   local_url: mongodb://admin:Liupeitao1.@localhost:27017/admin
   coll: test   #存储
   coll_siteinfo: siteinfo
