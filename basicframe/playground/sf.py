@@ -2,12 +2,12 @@ import redis
 from pymongo import MongoClient
 
 from basicframe.midwares.dbclient import DbClient
-from basicframe.settings import MONGO_DB_MUL, MONGO_URL, MONGO_COLL_SITEINFO, MONGO_MUL_URL
+from basicframe.settings import MONGO_DB_MUL,  MONGO_COLL_SITEINFO, MONGO_SITEINFO_URL
 from basicframe.filters.filter import judge_type
 
 # MongoDB 连接信息
 db_name = MONGO_DB_MUL
-mongo_url = MONGO_MUL_URL
+mongo_url = MONGO_SITEINFO_URL
 coll_name = MONGO_COLL_SITEINFO
 
 

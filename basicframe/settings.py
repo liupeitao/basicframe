@@ -102,7 +102,7 @@ RABBITMQ_VIRTUAL_HOST = rabbitmq_config['virtual_host']
 # mongodb 配置
 mongodb_config = config['mongodb']
 MONGO_URL = mongodb_config['url']
-MONGO_MUL_URL = mongodb_config['mul_url']
+MONGO_SITEINFO_URL = mongodb_config['siteinfo_url']
 MONGO_LOCAL_URL = mongodb_config['local_url']
 MONGO_DB = mongodb_config['db']
 MONGO_DB_MUL = mongodb_config['db_mul']
